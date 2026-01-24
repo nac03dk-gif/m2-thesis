@@ -345,6 +345,10 @@
             const referenceIdx = 2;
             let trials = [];
             
+            // ✅ AJOUT : Détermine quelle magnitude doit être "go" selon la règle
+            const goMagnitude = (ruleCondition === 1 || ruleCondition === 2) ? 'small' : 'large';
+            
+            // Créer les essais avec les formes
             for (let shapeIdx = 0; shapeIdx < 5; shapeIdx++) {
                 if (shapeIdx === referenceIdx) continue;
                 
@@ -356,15 +360,19 @@
                     (magnitude === 'large' && arrowDirForGo === 'right')
                     ? 'congruent' : 'incongruent';
                 
+                // ✅ FIX : Détermine si c'est go ou nogo selon la magnitude
+                const correctResponse = magnitude === goMagnitude ? 'go' : 'nogo';
+                
                 trials.push({
                     stimulus_type: 'shape',
                     stimulus_idx: shapeIdx,
                     magnitude: magnitude,
-                    correct_response: 'go',
+                    correct_response: correctResponse,  // ✅ Maintenant correct !
                     congruency: congruency
                 });
             }
             
+            // Créer les essais avec les flèches (reste identique)
             ['left', 'right'].forEach(arrowDir => {
                 const isGoSmall = arrowDir === rule.small_condition;
                 const isGoLarge = arrowDir === rule.large_condition;
@@ -389,14 +397,15 @@
                 });
             });
             
+            // Répéter pour avoir 70 essais (7 répétitions de 10 stimuli)
             const repeatedTrials = [];
             for (let i = 0; i < 7; i++) {
                 repeatedTrials.push(...trials);
             }
-            
+    
             return shuffleArray(repeatedTrials);
         }
-        
+                
         function showScreen(html) {
             const target = document.getElementById('jspsych-target');
             target.innerHTML = `<div class="jspsych-content">${html}</div>`;
