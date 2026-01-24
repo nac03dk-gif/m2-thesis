@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Transitive Inference Spatial Association Experiment</title>
-    <script src="https://unpkg.com/jspsych@7.3.4"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.3"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
-    <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <title>Transitive Inference & Spatial Association</title>
+    
     <style>
-        /* Custom styles for shapes */
+        body {
+            background-color: #808080;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        #jspsych-target {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .jspsych-content {
+            max-width: 800px;
+            padding: 40px;
+            text-align: center;
+        }
+        
         .shape-container {
             display: flex;
             justify-content: center;
@@ -24,64 +41,47 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
         
-        .star {
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-        }
-        
-        .square {
+        /* Carré */
+        .shape-square {
             width: 150px;
             height: 150px;
         }
         
-        .hexagon {
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        /* Triangle */
+        .shape-triangle {
+            width: 0;
+            height: 0;
+            border-left: 75px solid transparent;
+            border-right: 75px solid transparent;
+            border-bottom: 130px solid;
         }
         
-        .triangle {
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        }
-        
-        .heart {
-            position: relative;
+        /* Rond (Cercle) */
+        .shape-circle {
             width: 150px;
-            height: 135px;
+            height: 150px;
+            border-radius: 50%;
         }
         
-        .heart::before,
-        .heart::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            width: 75px;
-            height: 120px;
-            border-radius: 75px 75px 0 0;
+        /* Étoile */
+        .shape-star {
+            width: 150px;
+            height: 150px;
+            clip-path: polygon(
+                50% 0%, 61% 35%, 98% 35%, 68% 57%, 
+                79% 91%, 50% 70%, 21% 91%, 32% 57%, 
+                2% 35%, 39% 35%
+            );
         }
         
-        .heart::before {
-            left: 75px;
-        }
-        
-        .heart::after {
-            left: 0;
-        }
-        
-        .arrow {
-            font-size: 120px;
-            color: white;
-        }
-        
-        .feedback-correct {
-            color: green;
-            font-size: 36px;
-            font-weight: bold;
-        }
-        
-        .feedback-incorrect {
-            color: red;
-            font-size: 36px;
-            font-weight: bold;
+        /* Losange */
+        .shape-diamond {
+            width: 106px;
+            height: 106px;
+            transform: rotate(45deg);
         }
         
         .fixation {
@@ -89,29 +89,771 @@
             color: white;
         }
         
+        .feedback-correct {
+            color: #4CAF50;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .feedback-incorrect {
+            color: #f44336;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
         .instruction-text {
             font-size: 20px;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
+            line-height: 1.8;
             text-align: left;
+            color: white;
+        }
+        
+        .instruction-text h2 {
+            text-align: center;
+        }
+        
+        .instruction-text ul {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 600px;
         }
         
         .block-feedback {
             font-size: 24px;
             line-height: 1.8;
+            color: white;
+        }
+        
+        input[type="text"] {
+            padding: 12px;
+            font-size: 16px;
+            margin: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 200px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .arrow {
+            font-size: 120px;
+            color: white;
+        }
+        
+        .key-hint {
+            margin-top: 30px;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .single-stimulus {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
         }
 
-        /* Add background color */
-        body {
-            background-color: #808080;
+        /* Loading spinner */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
         }
 
-        .jspsych-content {
-            max-width: 95%;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body></body>
-<script src="experiment.js"></script>
+<body>
+    <div id="jspsych-target"></div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // ====================================================================
+        // CONFIGURATION FIREBASE
+        // ====================================================================
+        
+        // ⚠️ REMPLACE CES VALEURS PAR TES VRAIES VALEURS FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgG--PjinwSrEbd0Xg5kMP_foGDg06LUs",
+            authDomain: "m2-thesis.firebaseapp.com",
+            databaseURL: "https://m2-thesis-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "m2-thesis",
+            storageBucket: "m2-thesis.firebasestorage.app",
+            messagingSenderId: "162116586503",
+            appId: "1:162116586503:web:75358e3bcde792c0176ea2"
+        };
+        
+        // Initialise Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        // ====================================================================
+        // VARIABLES GLOBALES
+        // ====================================================================
+        
+        let participantId = '';
+        let sessionId = '';
+        let ruleOrder = [];
+        let accuracyWindow = [];
+        let allData = [];
+        let learningTrials = [];
+        let currentLearningTrial = 0;
+        let currentBlock = 0;
+        let currentTestTrial = 0;
+        let testTrials = [];
+        
+        const LEARNING_ACCURACY_THRESHOLD = 0.70;
+        const LEARNING_WINDOW_SIZE = 10;
+        const TEST_BLOCKS = 4;
+        const TRIALS_PER_BLOCK = 70;
+        const STIMULUS_DURATION = 2000;
+        const RT_MIN = 300;
+        const RT_MAX = 1500;
+        
+        const SHAPES = [
+            { type: 'square', color: '#FF0000', name: 'carré rouge' },
+            { type: 'triangle', color: '#0000FF', name: 'triangle bleu' },
+            { type: 'circle', color: '#00FF00', name: 'rond vert' },
+            { type: 'star', color: '#FFFF00', name: 'étoile jaune' },
+            { type: 'diamond', color: '#800080', name: 'losange violet' }
+        ];
+        
+        const RESPONSE_RULES = {
+            1: { 
+                small_condition: 'left', 
+                large_condition: 'right',
+                instruction: 'Appuie sur ESPACE si :<br><br>• La forme PERD face à la référence<br>• OU la flèche pointe vers la GAUCHE<br><br>Sinon, ne fais RIEN'
+            },
+            2: { 
+                small_condition: 'right', 
+                large_condition: 'left',
+                instruction: 'Appuie sur ESPACE si :<br><br>• La forme PERD face à la référence<br>• OU la flèche pointe vers la DROITE<br><br>Sinon, ne fais RIEN'
+            },
+            3: { 
+                small_condition: 'right', 
+                large_condition: 'right',
+                instruction: 'Appuie sur ESPACE si :<br><br>• La forme GAGNE face à la référence<br>• OU la flèche pointe vers la DROITE<br><br>Sinon, ne fais RIEN'
+            },
+            4: { 
+                small_condition: 'left', 
+                large_condition: 'left',
+                instruction: 'Appuie sur ESPACE si :<br><br>• La forme GAGNE face à la référence<br>• OU la flèche pointe vers la GAUCHE<br><br>Sinon, ne fais RIEN'
+            }
+        };
+        
+        // ====================================================================
+        // FONCTIONS UTILITAIRES
+        // ====================================================================
+        
+        function createShapeHTML(shapeIndex) {
+            const shape = SHAPES[shapeIndex];
+            
+            if (shape.type === 'triangle') {
+                return `<div class="shape shape-${shape.type}" style="border-bottom-color: ${shape.color};"></div>`;
+            }
+            
+            return `<div class="shape shape-${shape.type}" style="background-color: ${shape.color};"></div>`;
+        }
+        
+        function createPairHTML(leftIndex, rightIndex) {
+            return `
+                <div class="shape-container">
+                    <div>${createShapeHTML(leftIndex)}</div>
+                    <div>${createShapeHTML(rightIndex)}</div>
+                </div>
+                <div class="key-hint">
+                    <span style="margin-right: 80px;">Appuie sur <strong>S</strong> pour GAUCHE</span>
+                    <span style="margin-left: 80px;">Appuie sur <strong>K</strong> pour DROITE</span>
+                </div>
+            `;
+        }
+        
+        function createSingleStimulusHTML(stimulusType, stimulusIndex) {
+            if (stimulusType === 'shape') {
+                return `<div class="single-stimulus">${createShapeHTML(stimulusIndex)}</div>`;
+            } else {
+                const arrowSymbol = stimulusIndex === 'left' ? '←' : '→';
+                return `<div class="single-stimulus"><span class="arrow">${arrowSymbol}</span></div>`;
+            }
+        }
+        
+        function calculateRollingAccuracy() {
+            if (accuracyWindow.length < LEARNING_WINDOW_SIZE) return null;
+            const sum = accuracyWindow.slice(-LEARNING_WINDOW_SIZE).reduce((a, b) => a + b, 0);
+            return sum / LEARNING_WINDOW_SIZE;
+        }
+        
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+        
+        function createLearningTrials() {
+            const pairs = [[0, 1], [1, 2], [2, 3], [3, 4]];
+            let trials = [];
+            
+            pairs.forEach(pair => {
+                for (let i = 0; i < 5; i++) {
+                    if (Math.random() < 0.5) {
+                        trials.push({
+                            left_item: pair[0],
+                            right_item: pair[1],
+                            correct_response: 'k'
+                        });
+                    } else {
+                        trials.push({
+                            left_item: pair[1],
+                            right_item: pair[0],
+                            correct_response: 's'
+                        });
+                    }
+                }
+            });
+            
+            return shuffleArray(trials);
+        }
+        
+        function createTestTrials(ruleCondition) {
+            const rule = RESPONSE_RULES[ruleCondition];
+            const referenceIdx = 2;
+            let trials = [];
+            
+            for (let shapeIdx = 0; shapeIdx < 5; shapeIdx++) {
+                if (shapeIdx === referenceIdx) continue;
+                
+                const magnitude = shapeIdx < referenceIdx ? 'small' : 'large';
+                const arrowDirForGo = magnitude === 'small' ? rule.small_condition : rule.large_condition;
+                
+                const congruency = 
+                    (magnitude === 'small' && arrowDirForGo === 'left') ||
+                    (magnitude === 'large' && arrowDirForGo === 'right')
+                    ? 'congruent' : 'incongruent';
+                
+                trials.push({
+                    stimulus_type: 'shape',
+                    stimulus_idx: shapeIdx,
+                    magnitude: magnitude,
+                    correct_response: 'go',
+                    congruency: congruency
+                });
+            }
+            
+            ['left', 'right'].forEach(arrowDir => {
+                const isGoSmall = arrowDir === rule.small_condition;
+                const isGoLarge = arrowDir === rule.large_condition;
+                
+                let correctResponse, congruency;
+                if (isGoSmall || isGoLarge) {
+                    correctResponse = 'go';
+                    congruency = isGoSmall 
+                        ? (arrowDir === 'left' ? 'congruent' : 'incongruent')
+                        : (arrowDir === 'right' ? 'congruent' : 'incongruent');
+                } else {
+                    correctResponse = 'nogo';
+                    congruency = 'nogo';
+                }
+                
+                trials.push({
+                    stimulus_type: 'arrow',
+                    stimulus_idx: arrowDir,
+                    magnitude: 'n/a',
+                    correct_response: correctResponse,
+                    congruency: congruency
+                });
+            });
+            
+            const repeatedTrials = [];
+            for (let i = 0; i < 7; i++) {
+                repeatedTrials.push(...trials);
+            }
+            
+            return shuffleArray(repeatedTrials);
+        }
+        
+        function showScreen(html) {
+            const target = document.getElementById('jspsych-target');
+            target.innerHTML = `<div class="jspsych-content">${html}</div>`;
+        }
+        
+        // ====================================================================
+        // SAUVEGARDE DES DONNÉES (NOUVELLE VERSION AVEC FIREBASE)
+        // ====================================================================
+        
+        function saveDataToFirebase() {
+            // Affiche message de chargement
+            showScreen(`
+                <div class="block-feedback">
+                    <h2>⏳ Sauvegarde en cours...</h2>
+                    <div class="spinner"></div>
+                    <p>Ne ferme pas cette fenêtre.</p>
+                </div>
+            `);
+            
+            // Prépare les données
+            const dataToSave = {
+                participant_id: participantId,
+                session_id: sessionId,
+                timestamp: new Date().toISOString(),
+                rule_order: ruleOrder,
+                experiment_duration: Date.now() - window.experimentStartTime,
+                trials: allData
+            };
+            
+            // Sauvegarde dans Firebase
+            const dataRef = database.ref('participants/' + participantId + '_' + Date.now());
+            
+            dataRef.set(dataToSave)
+                .then(() => {
+                    // Succès !
+                    showScreen(`
+                        <div class="block-feedback">
+                            <h1>✅ Merci !</h1>
+                            <p>Tes données ont été sauvegardées avec succès.</p>
+                            <br>
+                            <p style="font-size: 18px;">Tu peux maintenant fermer cette fenêtre.</p>
+                        </div>
+                    `);
+                })
+                .catch((error) => {
+                    // Erreur : propose téléchargement local
+                    console.error("Erreur Firebase:", error);
+                    showScreen(`
+                        <div class="block-feedback">
+                            <h2>⚠️ Erreur de connexion</h2>
+                            <p>Les données vont être téléchargées sur ton ordinateur à la place.</p>
+                            <br>
+                            <button onclick="downloadDataBackup()">📥 Télécharger les données</button>
+                        </div>
+                    `);
+                });
+        }
+        
+        // Fonction de backup (téléchargement local)
+        function downloadDataBackup() {
+            const dataStr = JSON.stringify({
+                participant_id: participantId,
+                session_id: sessionId,
+                timestamp: new Date().toISOString(),
+                rule_order: ruleOrder,
+                trials: allData
+            }, null, 2);
+            
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `backup_${participantId}_${new Date().toISOString()}.json`;
+            link.click();
+            
+            setTimeout(() => {
+                showScreen(`
+                    <h1>✅ Fichier téléchargé !</h1>
+                    <p>Merci pour ta participation.</p>
+                    <p>Tu peux fermer cette fenêtre.</p>
+                `);
+            }, 500);
+        }
+        
+        // ====================================================================
+        // PHASE D'APPRENTISSAGE
+        // ====================================================================
+        
+        function showParticipantInfo() {
+            showScreen(`
+                <div class="instruction-text" style="text-align: center;">
+                    <h2>Expérience en psychologie cognitive</h2>
+                    <p>Bienvenue dans cette expérience !</p>
+                    <br>
+                    <input type="text" id="pid" placeholder="ID Participant (ex: P001)" value="">
+                    <input type="text" id="sid" placeholder="Session (ex: 001)" value="">
+                    <br>
+                    <button onclick="startExperiment()">Commencer l'expérience</button>
+                </div>
+            `);
+        }
+        
+        function startExperiment() {
+            participantId = document.getElementById('pid').value || 'P001';
+            sessionId = document.getElementById('sid').value || '001';
+            
+            // Enregistre le début de l'expérience
+            window.experimentStartTime = Date.now();
+            
+            // Détermine l'ordre des règles
+            const idMatch = participantId.match(/\d+/);
+            if (idMatch) {
+                const participantNum = parseInt(idMatch[0]);
+                const orderIndex = (participantNum - 1) % 4;
+                const orders = [
+                    [1, 2, 3, 4],
+                    [2, 3, 4, 1],
+                    [3, 4, 1, 2],
+                    [4, 1, 2, 3]
+                ];
+                ruleOrder = orders[orderIndex];
+            } else {
+                ruleOrder = [1, 2, 3, 4];
+            }
+            
+            showLearningInstructions();
+        }
+        
+        function showLearningInstructions() {
+            showScreen(`
+                <div class="instruction-text">
+                    <h2>PHASE D'APPRENTISSAGE</h2>
+                    <p>Tu vas voir des paires de formes colorées.</p>
+                    <p>Ton objectif : apprendre quelle forme est "meilleure" dans chaque paire.</p>
+                    <br>
+                    <p><strong>Appuie sur 'S'</strong> pour choisir la forme de GAUCHE</p>
+                    <p><strong>Appuie sur 'K'</strong> pour choisir la forme de DROITE</p>
+                    <br>
+                    <p>Tu recevras un feedback après chaque choix.</p>
+                    <p>Continue jusqu'à maîtriser la tâche !</p>
+                    <br>
+                    <p style="text-align: center;">Appuie sur <strong>ESPACE</strong> pour commencer</p>
+                </div>
+            `);
+            
+            document.addEventListener('keydown', function spaceStart(e) {
+                if (e.key === ' ') {
+                    document.removeEventListener('keydown', spaceStart);
+                    startLearning();
+                }
+            });
+        }
+        
+        function startLearning() {
+            learningTrials = createLearningTrials();
+            currentLearningTrial = 0;
+            showFixation(() => showLearningTrial());
+        }
+        
+        function showFixation(callback) {
+            showScreen('<div class="fixation">+</div>');
+            setTimeout(callback, 500);
+        }
+        
+        function showLearningTrial() {
+            if (currentLearningTrial >= learningTrials.length) {
+                const accuracy = calculateRollingAccuracy();
+                if (accuracy !== null && accuracy >= LEARNING_ACCURACY_THRESHOLD) {
+                    showLearningComplete();
+                } else {
+                    learningTrials = createLearningTrials();
+                    currentLearningTrial = 0;
+                    showFixation(() => showLearningTrial());
+                }
+                return;
+            }
+            
+            const trial = learningTrials[currentLearningTrial];
+            showScreen(createPairHTML(trial.left_item, trial.right_item));
+            
+            const trialStart = Date.now();
+            
+            function handleResponse(e) {
+                if (e.key === 's' || e.key === 'k') {
+                    document.removeEventListener('keydown', handleResponse);
+                    
+                    const rt = Date.now() - trialStart;
+                    const correct = e.key === trial.correct_response;
+                    
+                    accuracyWindow.push(correct ? 1 : 0);
+                    const accuracy = calculateRollingAccuracy();
+                    
+                    allData.push({
+                        participant: participantId,
+                        session: sessionId,
+                        task: 'learning',
+                        trial: currentLearningTrial,
+                        left_item: trial.left_item,
+                        right_item: trial.right_item,
+                        correct_response: trial.correct_response,
+                        participant_response: e.key,
+                        correct: correct,
+                        rt: rt,
+                        rolling_accuracy: accuracy
+                    });
+                    
+                    currentLearningTrial++;
+                    showFeedback(correct);
+                }
+            }
+            
+            document.addEventListener('keydown', handleResponse);
+        }
+        
+        function showFeedback(correct) {
+            const feedbackClass = correct ? 'feedback-correct' : 'feedback-incorrect';
+            const feedbackText = correct ? 'Correct !' : 'Incorrect';
+            
+            showScreen(`<div class="${feedbackClass}">${feedbackText}</div>`);
+            
+            setTimeout(() => {
+                showFixation(() => showLearningTrial());
+            }, 800);
+        }
+        
+        function showLearningComplete() {
+            const accuracy = calculateRollingAccuracy();
+            showScreen(`
+                <div class="block-feedback">
+                    <h2>Excellent !</h2>
+                    <p>Tu as atteint ${(accuracy * 100).toFixed(0)}% de réussite.</p>
+                    <p>Phase d'apprentissage terminée !</p>
+                    <br>
+                    <p>Appuie sur <strong>ESPACE</strong> pour continuer vers la phase de test</p>
+                </div>
+            `);
+            
+            document.addEventListener('keydown', function spaceNext(e) {
+                if (e.key === ' ') {
+                    document.removeEventListener('keydown', spaceNext);
+                    showTestInstructions();
+                }
+            });
+        }
+        
+        // ====================================================================
+        // PHASE DE TEST
+        // ====================================================================
+        
+        function showTestInstructions() {
+            const referenceShapeHTML = createShapeHTML(2);
+            
+            showScreen(`
+                <div class="instruction-text">
+                    <h2>PHASE DE TEST</h2>
+                    <p>Bravo ! Tu as appris les formes.</p>
+                    <br>
+                    <div style="text-align: center; margin: 30px 0; background-color: #555; padding: 20px; border-radius: 10px;">
+                        <p style="font-size: 22px; margin-bottom: 15px;"><strong>Voici la forme de RÉFÉRENCE :</strong></p>
+                        <div style="display: flex; justify-content: center;">
+                            ${referenceShapeHTML}
+                        </div>
+                        <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;">Le <strong>rond vert</strong></p>
+                    </div>
+                    <br>
+                    <p>Maintenant, tu vas voir des formes individuelles et des flèches.</p>
+                    <p>Certaines formes <strong>GAGNENT</strong> face au rond vert, d'autres <strong>PERDENT</strong>.</p>
+                    <br>
+                    <p>Ta tâche : appuyer sur <strong>ESPACE</strong> quand le stimulus correspond à une règle.</p>
+                    <br>
+                    <p>Important :</p>
+                    <ul>
+                        <li>Réponds le plus <strong>RAPIDEMENT</strong> possible</li>
+                        <li>Sois <strong>PRÉCIS</strong></li>
+                        <li>Tu as 2 secondes maximum pour répondre</li>
+                    </ul>
+                    <br>
+                    <p>La règle sera montrée au début de chaque bloc.</p>
+                    <p>Il y aura 4 blocs au total.</p>
+                    <br>
+                    <p style="text-align: center;">Appuie sur <strong>ESPACE</strong> pour commencer</p>
+                </div>
+            `);
+            
+            document.addEventListener('keydown', function spaceTestStart(e) {
+                if (e.key === ' ') {
+                    document.removeEventListener('keydown', spaceTestStart);
+                    currentBlock = 0;
+                    startTestBlock();
+                }
+            });
+        }
+        
+        function startTestBlock() {
+            if (currentBlock >= TEST_BLOCKS) {
+                showExperimentComplete();
+                return;
+            }
+            
+            const ruleCondition = ruleOrder[currentBlock];
+            const rule = RESPONSE_RULES[ruleCondition];
+            const referenceShapeHTML = createShapeHTML(2);
+            
+            showScreen(`
+                <div class="instruction-text">
+                    <h2>BLOC ${currentBlock + 1} sur ${TEST_BLOCKS}</h2>
+                    <br>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <p style="font-size: 22px; margin-bottom: 15px;"><strong>Forme de référence :</strong></p>
+                        <div style="display: flex; justify-content: center;">
+                            ${referenceShapeHTML}
+                        </div>
+                        <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;">⬆️ Ceci est la forme de référence ⬆️</p>
+                    </div>
+                    <br>
+                    <p style="font-size: 22px;">${rule.instruction}</p>
+                    <br>
+                    <p><strong>Rappel :</strong></p>
+                    <ul>
+                        <li>Réponds aussi vite que possible</li>
+                        <li>Sois précis</li>
+                    </ul>
+                    <br>
+                    <p style="text-align: center;">Appuie sur <strong>ESPACE</strong> quand tu es prêt</p>
+                </div>
+            `);
+            
+            document.addEventListener('keydown', function spaceBlockStart(e) {
+                if (e.key === ' ') {
+                    document.removeEventListener('keydown', spaceBlockStart);
+                    testTrials = createTestTrials(ruleCondition);
+                    currentTestTrial = 0;
+                    showFixation(() => showTestTrial(ruleCondition));
+                }
+            });
+        }
+        
+        function showTestTrial(ruleCondition) {
+            if (currentTestTrial >= testTrials.length) {
+                showBlockFeedback();
+                return;
+            }
+            
+            const trial = testTrials[currentTestTrial];
+            showScreen(createSingleStimulusHTML(trial.stimulus_type, trial.stimulus_idx));
+            
+            const trialStart = Date.now();
+            let responded = false;
+            
+            function handleResponse(e) {
+                if (e.key === ' ' && !responded) {
+                    responded = true;
+                    document.removeEventListener('keydown', handleResponse);
+                    
+                    const rt = Date.now() - trialStart;
+                    const validRt = rt >= RT_MIN && rt <= RT_MAX;
+                    const correct = trial.correct_response === 'go';
+                    const errorType = correct ? 'none' : 'commission';
+                    
+                    allData.push({
+                        participant: participantId,
+                        session: sessionId,
+                        task: 'test',
+                        block: currentBlock + 1,
+                        rule_condition: ruleCondition,
+                        trial: currentTestTrial + 1,
+                        stimulus_type: trial.stimulus_type,
+                        stimulus_idx: trial.stimulus_idx,
+                        magnitude: trial.magnitude,
+                        congruency: trial.congruency,
+                        correct_response: trial.correct_response,
+                        participant_response: 'go',
+                        correct: correct,
+                        error_type: errorType,
+                        rt: rt,
+                        valid_rt: validRt
+                    });
+                    
+                    currentTestTrial++;
+                    setTimeout(() => showFixation(() => showTestTrial(ruleCondition)), 300);
+                }
+            }
+            
+            document.addEventListener('keydown', handleResponse);
+            
+            setTimeout(() => {
+                if (!responded) {
+                    document.removeEventListener('keydown', handleResponse);
+                    
+                    const correct = trial.correct_response === 'nogo';
+                    const errorType = correct ? 'none' : 'omission';
+                    
+                    allData.push({
+                        participant: participantId,
+                        session: sessionId,
+                        task: 'test',
+                        block: currentBlock + 1,
+                        rule_condition: ruleCondition,
+                        trial: currentTestTrial + 1,
+                        stimulus_type: trial.stimulus_type,
+                        stimulus_idx: trial.stimulus_idx,
+                        magnitude: trial.magnitude,
+                        congruency: trial.congruency,
+                        correct_response: trial.correct_response,
+                        participant_response: 'nogo',
+                        correct: correct,
+                        error_type: errorType,
+                        rt: null,
+                        valid_rt: false
+                    });
+                    
+                    currentTestTrial++;
+                    setTimeout(() => showFixation(() => showTestTrial(ruleCondition)), 300);
+                }
+            }, STIMULUS_DURATION);
+        }
+        
+        function showBlockFeedback() {
+            const blockData = allData.filter(d => d.task === 'test' && d.block === currentBlock + 1);
+            const accuracy = blockData.filter(d => d.correct).length / blockData.length;
+            const validRts = blockData.filter(d => d.rt !== null && d.valid_rt).map(d => d.rt);
+            const meanRt = validRts.length > 0 
+                ? validRts.reduce((a, b) => a + b, 0) / validRts.length 
+                : 0;
+            
+            showScreen(`
+                <div class="block-feedback">
+                    <h2>Bloc ${currentBlock + 1} terminé !</h2>
+                    <br>
+                    <p>Précision : ${(accuracy * 100).toFixed(1)}%</p>
+                    <p>Temps de réaction moyen : ${meanRt.toFixed(0)} ms</p>
+                    <br>
+                    ${currentBlock + 1 < TEST_BLOCKS 
+                        ? '<p>Appuie sur <strong>ESPACE</strong> pour continuer</p>' 
+                        : '<p>Appuie sur <strong>ESPACE</strong> pour terminer</p>'}
+                </div>
+            `);
+            
+            document.addEventListener('keydown', function spaceNextBlock(e) {
+                if (e.key === ' ') {
+                    document.removeEventListener('keydown', spaceNextBlock);
+                    currentBlock++;
+                    startTestBlock();
+                }
+            });
+        }
+        
+        function showExperimentComplete() {
+            // Sauvegarde automatiquement dans Firebase
+            saveDataToFirebase();
+        }
+        
+        // ====================================================================
+        // DÉMARRAGE
+        // ====================================================================
+        
+        window.onload = showParticipantInfo;
+    </script>
+</body>
 </html>
