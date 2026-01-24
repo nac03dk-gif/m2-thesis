@@ -377,16 +377,20 @@
                 const isGoSmall = arrowDir === rule.small_condition;
                 const isGoLarge = arrowDir === rule.large_condition;
                 
+                // ✅ FIX : Détermine quelle magnitude doit être "go" pour ce bloc
+                const goMagnitude = (ruleCondition === 1 || ruleCondition === 2) ? 'small' : 'large';
+                
                 let correctResponse, congruency;
-                if (isGoSmall || isGoLarge) {
+                
+                // La flèche est GO seulement si elle correspond à la magnitude GO
+                if ((goMagnitude === 'small' && isGoSmall) || (goMagnitude === 'large' && isGoLarge)) {
                     correctResponse = 'go';
-                    congruency = isGoSmall 
-                        ? (arrowDir === 'left' ? 'congruent' : 'incongruent')
-                        : (arrowDir === 'right' ? 'congruent' : 'incongruent');
+                    // Congruence : flèche gauche = congruent avec small, droite = congruent avec large
+                    congruency = (arrowDir === 'left') ? 'congruent' : 'incongruent';
                 } else {
                     correctResponse = 'nogo';
                     congruency = 'nogo';
-                }
+                }   
                 
                 trials.push({
                     stimulus_type: 'arrow',
