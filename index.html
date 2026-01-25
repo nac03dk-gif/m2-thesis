@@ -542,8 +542,8 @@
             showScreen(`
                 <div class="instruction-text">
                     <h2>PHASE D'APPRENTISSAGE</h2>
-                    <p>Tu vas voir des paires de formes colorées.</p>
-                    <p>Ton objectif : apprendre quelle forme est "meilleure" dans chaque paire.</p>
+                    <p>Deux formes colorées vont s'afficher à l'écran.</p>
+                    <p>L'objectif : apprendre quelle forme est "meilleure" dans chaque paire.</p>
                     <br>
                     <p><strong>Appuie sur 'S'</strong> pour choisir la forme de GAUCHE</p>
                     <p><strong>Appuie sur 'K'</strong> pour choisir la forme de DROITE</p>
@@ -639,7 +639,7 @@
             const accuracy = calculateRollingAccuracy();
             showScreen(`
                 <div class="block-feedback">
-                    <h2>Excellent !</h2>
+                    <h2>Bravo !</h2>
                     <p>Tu as atteint ${(accuracy * 100).toFixed(0)}% de réussite.</p>
                     <p>Phase d'apprentissage terminée !</p>
                     <br>
@@ -665,7 +665,7 @@
             showScreen(`
                 <div class="instruction-text">
                     <h2>PHASE DE TEST</h2>
-                    <p>Bravo ! Tu as appris les formes.</p>
+                    <p>Instructions </p>
                     <br>
                     <div style="text-align: center; margin: 30px 0; background-color: #555; padding: 20px; border-radius: 10px;">
                         <p style="font-size: 22px; margin-bottom: 15px;"><strong>Voici la forme de RÉFÉRENCE :</strong></p>
@@ -678,7 +678,7 @@
                     <p>Maintenant, tu vas voir des formes individuelles et des flèches.</p>
                     <p>Certaines formes <strong>GAGNENT</strong> face au rond vert, d'autres <strong>PERDENT</strong>.</p>
                     <br>
-                    <p>Ta tâche : appuyer sur <strong>ESPACE</strong> quand le stimulus correspond à une règle.</p>
+                    <p>Ta tâche : appuyer sur <strong>ESPACE</strong> quand la forme qui s'affiche correspond à la règle.</p>
                     <br>
                     <p>Important :</p>
                     <ul>
@@ -722,7 +722,7 @@
                         <div style="display: flex; justify-content: center;">
                             ${referenceShapeHTML}
                         </div>
-                        <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;">⬆️ Ceci est la forme de référence ⬆️</p>
+                        <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;"> Ceci est la forme de référence </p>
                     </div>
                     <br>
                     <p style="font-size: 22px;">${rule.instruction}</p>
@@ -730,10 +730,10 @@
                     <p><strong>Rappel :</strong></p>
                     <ul>
                         <li>Réponds aussi vite que possible</li>
-                        <li>Sois précis</li>
+                        <li>Sois le plus précis possible</li>
                     </ul>
                     <br>
-                    <p style="text-align: center;">Appuie sur <strong>ESPACE</strong> quand tu es prêt</p>
+                    <p style="text-align: center;">Appuie sur <strong>ESPACE</strong> quand tu es prêt(e)</p>
                 </div>
             `);
             
