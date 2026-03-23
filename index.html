@@ -792,18 +792,17 @@
                 </div>
             `);
             
-            // APRÈS :
-            document.addEventListener('keydown', function spaceBlockStart(e) {
+            document.addEventListener('keydown', function spaceTestStart(e) {
                 if (e.key === ' ') {
-                    document.removeEventListener('keydown', spaceBlockStart);
-                    // 👉 D'abord l'entraînement, puis les vrais essais
-                    showPracticeBlock(ruleCondition, () => {
-                        testTrials = createTestTrials(ruleCondition);
-                        currentTestTrial = 0;
-                        showFixation(() => showTestTrial(ruleCondition));
+                    document.removeEventListener('keydown', spaceTestStart);
+                    showPracticeBlock(ruleOrder[0], () => {
+                        currentBlock = 0;
+                        startTestBlock();
                     });
                 }
             });
+        }  
+        
         
         function startTestBlock() {
             if (currentBlock >= TEST_BLOCKS) {
