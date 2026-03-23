@@ -617,26 +617,24 @@
                     <h2>Expérience en psychologie cognitive</h2>
                     <p>Bienvenue dans cette expérience !</p>
                     <br>
-                    <input type="text" id="pid" placeholder="ID Participant (ex: P001)" value="">
-                    <input type="text" id="sid" placeholder="Session (ex: 001)" value="">
-                    <br>
                     <button onclick="startExperiment()">Commencer l'expérience</button>
                 </div>
             `);
         }
         
         function startExperiment() {
-            participantId = document.getElementById('pid').value || 'P001';
-            sessionId = document.getElementById('sid').value || '001';
-            
-            // Enregistre le début de l'expérience
+            sessionId = '001';
             window.experimentStartTime = Date.now();
-            
-            // Détermine l'ordre des règles
-            const idMatch = participantId.match(/\d+/);
-            if (idMatch) {
-                const participantNum = parseInt(idMatch[0]);
-                const orderIndex = (participantNum - 1) % 4;
+        
+            // Lit le compteur dans Firebase, l'incrémente, et démarre
+            const counterRef = database.ref('participant_counter');
+            counterRef.transaction(function(currentValue) {
+                return (currentValue || 0) + 1;
+            }).then(function(result) {
+                const num = result.snapshot.val();
+                participantId = 'P' + String(num).padStart(3, '0'); // → P001, P002, etc.
+        
+                const orderIndex = (num - 1) % 4;
                 const orders = [
                     [1, 2, 3, 4],
                     [2, 3, 4, 1],
@@ -644,11 +642,15 @@
                     [4, 1, 2, 3]
                 ];
                 ruleOrder = orders[orderIndex];
-            } else {
+        
+                showLearningInstructions();
+            }).catch(function(error) {
+                console.error("Erreur compteur Firebase:", error);
+                // Fallback en cas d'erreur réseau
+                participantId = 'P_' + Date.now();
                 ruleOrder = [1, 2, 3, 4];
-            }
-            
-            showLearningInstructions();
+                showLearningInstructions();
+            });
         }
         
         function showLearningInstructions() {
