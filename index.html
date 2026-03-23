@@ -621,6 +621,7 @@
                 </div>
             `);
         }
+
         
         function startExperiment() {
             sessionId = '001';
@@ -643,14 +644,79 @@
                 ];
                 ruleOrder = orders[orderIndex];
         
-                showLearningInstructions();
+                showDemographics();
             }).catch(function(error) {
                 console.error("Erreur compteur Firebase:", error);
                 // Fallback en cas d'erreur réseau
                 participantId = 'P_' + Date.now();
                 ruleOrder = [1, 2, 3, 4];
-                showLearningInstructions();
+                showDemographics();
             });
+        }
+
+        function showDemographics() {
+            showScreen(`
+                <div class="instruction-text">
+                    <h2>Informations générales</h2>
+                    <p>Merci de remplir les informations suivantes avant de commencer.</p>
+                    <br>
+        
+                    <label><strong>Âge :</strong></label><br>
+                    <input type="number" id="demo-age" min="18" max="99" placeholder="ex: 23"
+                        style="width: 100px; margin: 10px 0 20px 0;"><br>
+        
+                    <label><strong>Genre :</strong></label><br>
+                    <div style="margin: 10px 0 20px 0;">
+                        <label><input type="radio" name="genre" value="femme"> Femme</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="genre" value="homme"> Homme</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="genre" value="autre"> Autre / ne se prononce pas</label>
+                    </div>
+        
+                    <label><strong>Dextérité :</strong></label><br>
+                    <div style="margin: 10px 0 20px 0;">
+                        <label><input type="radio" name="dexterite" value="droitier"> Droitier(e)</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="dexterite" value="gaucher"> Gaucher(e)</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="dexterite" value="ambidextre"> Ambidextre</label>
+                    </div>
+        
+                    <label><strong>Sens d'apprentissage de la lecture/écriture :</strong></label><br>
+                    <div style="margin: 10px 0 20px 0;">
+                        <label><input type="radio" name="lecture" value="gauche_droite"> Gauche → Droite (ex: français, anglais)</label><br>
+                        <label><input type="radio" name="lecture" value="droite_gauche"> Droite → Gauche (ex: arabe, hébreu)</label><br>
+                        <label><input type="radio" name="lecture" value="les_deux"> Les deux (bilingue)</label>
+                    </div>
+        
+                    <br>
+                    <div style="text-align: center;">
+                        <button onclick="submitDemographics()">Continuer</button>
+                    </div>
+                </div>
+            `);
+        }
+        
+        function submitDemographics() {
+            const age = document.getElementById('demo-age').value;
+            const genre = document.querySelector('input[name="genre"]:checked');
+            const dexterite = document.querySelector('input[name="dexterite"]:checked');
+            const lecture = document.querySelector('input[name="lecture"]:checked');
+        
+            // Vérifie que tout est rempli
+            if (!age || !genre || !dexterite || !lecture) {
+                alert('Merci de remplir tous les champs avant de continuer.');
+                return;
+            }
+        
+            // Sauvegarde dans allData
+            allData.push({
+                task: 'demographics',
+                participant: participantId,
+                age: parseInt(age),
+                genre: genre.value,
+                dexterite: dexterite.value,
+                sens_lecture: lecture.value
+            });
+        
+            showLearningInstructions();
         }
         
         function showLearningInstructions() {
