@@ -498,26 +498,24 @@
                 }, STIMULUS_DURATION);
             }
         
-            // Écran d'intro de l'entraînement
-            showScreen(`
-                <div class="instruction-text">
-                    <h2>ENTRAÎNEMENT À LA TÂCHE PRINCIPALE</h2>
-                    <br>
-                    <p>Avant de commencer, tu vas faire <strong>10 essais d'entraînement</strong> avec feedback.</p>
-                    <br>
-                    <p>Appuie sur <strong>ESPACE</strong> pour démarrer</p>
-                </div>
-            `);
-            document.addEventListener('keydown', function spacePractice(e) {
-                if (e.key === ' ') {
-                    document.removeEventListener('keydown', spacePractice);
-                    showFixation(runNextTrial);
-                }
-            });
-        }
+                // Écran d'intro de l'entraînement
+                showScreen(`
+                    <div class="instruction-text">
+                        <h2>ENTRAÎNEMENT À LA TÂCHE PRINCIPALE</h2>
+                        <br>
+                        <p>Avant de commencer, tu vas faire <strong>10 essais d'entraînement</strong> avec feedback.</p>
+                        <br>
+                        <p>Appuie sur <strong>ESPACE</strong> pour démarrer</p>
+                    </div>
+                `);
+                document.addEventListener('keydown', function spacePractice(e) {
+                    if (e.key === ' ') {
+                        document.removeEventListener('keydown', spacePractice);
+                        showFixation(runNextTrial);
+                    }
+                });
+            }
 
-
-        
                 function showPracticeFeedback(correct, callback) {
                     const feedbackClass = correct ? 'feedback-correct' : 'feedback-incorrect';
                     const feedbackText = correct ? '✅ Correct !' : '❌ Incorrect';
