@@ -233,6 +233,8 @@
         const RT_MIN = 100;
         const RT_MAX = 2000;
         
+        const PRACTICE_TRIALS_COUNT = 10;
+        
         const SHAPES = [
             { type: 'square', color: '#FF0000', name: 'carré rouge' },
             { type: 'triangle', color: '#0000FF', name: 'triangle bleu' },
@@ -409,7 +411,103 @@
     
             return shuffleArray(repeatedTrials);
         }
-                
+
+        function createPracticeTrials(ruleCondition) {
+            const rule = RESPONSE_RULES[ruleCondition];
+            const goMagnitude = (ruleCondition === 1 || ruleCondition === 2) ? 'small' : 'large';
+            let trials = [];
+        
+            for (let shapeIdx = 0; shapeIdx < 5; shapeIdx++) {
+                if (shapeIdx === 2) continue;
+                const magnitude = shapeIdx < 2 ? 'small' : 'large';
+                trials.push({
+                    stimulus_type: 'shape',
+                    stimulus_idx: shapeIdx,
+                    correct_response: magnitude === goMagnitude ? 'go' : 'nogo'
+                });
+            }
+        
+            ['left', 'right'].forEach(arrowDir => {
+                const isGoSmall = arrowDir === rule.small_condition;
+                const isGoLarge = arrowDir === rule.large_condition;
+                trials.push({
+                    stimulus_type: 'arrow',
+                    stimulus_idx: arrowDir,
+                    correct_response:
+                        (goMagnitude === 'small' && isGoSmall) || (goMagnitude === 'large' && isGoLarge)
+                        ? 'go' : 'nogo'
+                });
+            });
+        
+            const repeated = [];
+            while (repeated.length < PRACTICE_TRIALS_COUNT) {
+                repeated.push(...shuffleArray(trials));
+            }
+            return repeated.slice(0, PRACTICE_TRIALS_COUNT);
+        }
+        
+        function showPracticeBlock(ruleCondition, onComplete) {
+            const practiceTrials = createPracticeTrials(ruleCondition);
+            let currentPracticeTrial = 0;
+        
+            function runNextTrial() {
+                if (currentPracticeTrial >= practiceTrials.length) {
+                    showScreen(`
+                        <div class="block-feedback">
+                            <h2>✅ Entraînement terminé !</h2>
+                            <p>Les vrais essais vont commencer.<br>
+                            <strong>Il n'y aura plus de feedback.</strong></p>
+                            <br>
+                            <p>Appuie sur <strong>ESPACE</strong> pour commencer</p>
+                        </div>
+                    `);
+                    document.addEventListener('keydown', function spaceStart(e) {
+                        if (e.key === ' ') {
+                            document.removeEventListener('keydown', spaceStart);
+                            onComplete();
+                        }
+                    });
+                    return;
+                }
+        
+                const trial = practiceTrials[currentPracticeTrial];
+                showScreen(createSingleStimulusHTML(trial.stimulus_type, trial.stimulus_idx));
+        
+                const trialStart = Date.now();
+                let responded = false;
+        
+                function handleResponse(e) {
+                    if (e.key === ' ' && !responded) {
+                        responded = true;
+                        document.removeEventListener('keydown', handleResponse);
+                        const correct = trial.correct_response === 'go';
+                        currentPracticeTrial++;
+                        showPracticeFeedback(correct, runNextTrial);
+                    }
+                }
+        
+                document.addEventListener('keydown', handleResponse);
+        
+                setTimeout(() => {
+                    if (!responded) {
+                        document.removeEventListener('keydown', handleResponse);
+                        const correct = trial.correct_response === 'nogo';
+                        currentPracticeTrial++;
+                        showPracticeFeedback(correct, runNextTrial);
+                    }
+                }, STIMULUS_DURATION);
+            }
+        
+            showFixation(runNextTrial);
+        }
+        
+        function showPracticeFeedback(correct, callback) {
+            const feedbackClass = correct ? 'feedback-correct' : 'feedback-incorrect';
+            const feedbackText = correct ? '✅ Correct !' : '❌ Incorrect';
+            showScreen(`<div class="${feedbackClass}">${feedbackText}</div>`);
+            setTimeout(callback, 800);
+        }
+        
         function showScreen(html) {
             const target = document.getElementById('jspsych-target');
             target.innerHTML = `<div class="jspsych-content">${html}</div>`;
@@ -694,14 +792,18 @@
                 </div>
             `);
             
-            document.addEventListener('keydown', function spaceTestStart(e) {
+            // APRÈS :
+            document.addEventListener('keydown', function spaceBlockStart(e) {
                 if (e.key === ' ') {
-                    document.removeEventListener('keydown', spaceTestStart);
-                    currentBlock = 0;
-                    startTestBlock();
+                    document.removeEventListener('keydown', spaceBlockStart);
+                    // 👉 D'abord l'entraînement, puis les vrais essais
+                    showPracticeBlock(ruleCondition, () => {
+                        testTrials = createTestTrials(ruleCondition);
+                        currentTestTrial = 0;
+                        showFixation(() => showTestTrial(ruleCondition));
+                    });
                 }
             });
-        }
         
         function startTestBlock() {
             if (currentBlock >= TEST_BLOCKS) {
