@@ -445,7 +445,7 @@
             }
             return repeated.slice(0, PRACTICE_TRIALS_COUNT);
         }
-        
+
         function showPracticeBlock(ruleCondition, onComplete) {
             const practiceTrials = createPracticeTrials(ruleCondition);
             let currentPracticeTrial = 0;
@@ -498,10 +498,7 @@
                 }, STIMULUS_DURATION);
             }
         
-            showFixation(runNextTrial);
-        }
-       
-        // APRÈS :
+            // Écran d'intro de l'entraînement
             showScreen(`
                 <div class="instruction-text">
                     <h2>ENTRAÎNEMENT À LA TÂCHE PRINCIPALE</h2>
@@ -518,7 +515,9 @@
                 }
             });
         }
-                
+
+
+        
                 function showPracticeFeedback(correct, callback) {
                     const feedbackClass = correct ? 'feedback-correct' : 'feedback-incorrect';
                     const feedbackText = correct ? '✅ Correct !' : '❌ Incorrect';
