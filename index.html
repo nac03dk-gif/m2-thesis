@@ -1012,6 +1012,19 @@
         }
         
         function showBlockFeedback() {
+            const dataToSave = {
+                participant_id: participantId,
+                session_id: sessionId,
+                timestamp: new Date().toISOString(),
+                rule_order: ruleOrder,
+                experiment_duration: Date.now() - window.experimentStartTime,
+                trials: allData
+            };
+            const dataRef = database.ref('participants/' + participantId + '/bloc_' + (currentBlock + 1));
+            dataRef.set(dataToSave).catch(function(error) {
+                console.error("Erreur sauvegarde intermédiaire:", error);
+            });
+        
             const blockData = allData.filter(d => d.task === 'test' && d.block === currentBlock + 1);
             const accuracy = blockData.filter(d => d.correct).length / blockData.length;
             const validRts = blockData.filter(d => d.rt !== null && d.valid_rt).map(d => d.rt);
