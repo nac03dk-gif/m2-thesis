@@ -287,8 +287,8 @@
                     <div>${createShapeHTML(rightIndex)}</div>
                 </div>
                 <div class="key-hint">
-                    <span style="margin-right: 80px;">Appuie sur <strong>S</strong> pour GAUCHE</span>
-                    <span style="margin-left: 80px;">Appuie sur <strong>K</strong> pour DROITE</span>
+                    <span style="margin-right: 80px;">Appuie sur <strong>Q</strong> pour GAUCHE</span>
+                    <span style="margin-left: 80px;">Appuie sur <strong>M</strong> pour DROITE</span>
                 </div>
             `;
         }
@@ -327,13 +327,13 @@
                         trials.push({
                             left_item: pair[0],
                             right_item: pair[1],
-                            correct_response: 'k'
+                            correct_response: 'm'
                         });
                     } else {
                         trials.push({
                             left_item: pair[1],
                             right_item: pair[0],
-                            correct_response: 's'
+                            correct_response: 'q'
                         });
                     }
                 }
@@ -726,8 +726,8 @@
                     <p>Deux formes colorées vont s'afficher à l'écran.</p>
                     <p>L'objectif : apprendre quelle forme est "meilleure" dans chaque paire.</p>
                     <br>
-                    <p><strong>Appuie sur 'S'</strong> pour choisir la forme de GAUCHE</p>
-                    <p><strong>Appuie sur 'K'</strong> pour choisir la forme de DROITE</p>
+                    <p><strong>Appuie sur 'Q'</strong> pour choisir la forme de GAUCHE</p>
+                    <p><strong>Appuie sur 'M'</strong> pour choisir la forme de DROITE</p>
                     <br>
                     <p>Tu recevras un feedback après chaque choix.</p>
                     <p>Continue jusqu'à maîtriser la tâche !</p>
@@ -774,7 +774,7 @@
             const trialStart = Date.now();
             
             function handleResponse(e) {
-                if (e.key === 's' || e.key === 'k') {
+                if (e.key === 'q' || e.key === 'm') {
                     document.removeEventListener('keydown', handleResponse);
                     
                     const rt = Date.now() - trialStart;
