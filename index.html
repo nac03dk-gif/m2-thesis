@@ -459,12 +459,16 @@
                             <strong>Il n'y aura plus de feedback.</strong></p>
                             <br>
                             <p>Appuie sur <strong>ESPACE</strong> pour commencer</p>
+                            <p>Appuie sur <strong>R</strong> pour refaire l'entraînement</p>
                         </div>
                     `);
-                    document.addEventListener('keydown', function spaceStart(e) {
+                    document.addEventListener('keydown', function spaceOrRetry(e) {
                         if (e.key === ' ') {
-                            document.removeEventListener('keydown', spaceStart);
+                            document.removeEventListener('keydown', spaceOrRetry);
                             onComplete();
+                        } else if (e.key === 'r' || e.key === 'R') {
+                            document.removeEventListener('keydown', spaceOrRetry);
+                            showPracticeBlock(ruleCondition, onComplete);
                         }
                     });
                     return;
