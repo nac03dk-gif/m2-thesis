@@ -644,13 +644,13 @@
                 ];
                 ruleOrder = orders[orderIndex];
         
-                showDemographics();
+                showLearningInstructions();
             }).catch(function(error) {
                 console.error("Erreur compteur Firebase:", error);
                 // Fallback en cas d'erreur réseau
                 participantId = 'P_' + Date.now();
                 ruleOrder = [1, 2, 3, 4];
-                showDemographics();
+                showLearningInstructions();
             });
         }
 
@@ -716,7 +716,7 @@
                 sens_lecture: lecture.value
             });
         
-            showLearningInstructions();
+            saveDataToFirebase();
         }
         
         function showLearningInstructions() {
@@ -1056,7 +1056,7 @@
         
         function showExperimentComplete() {
             // Sauvegarde automatiquement dans Firebase
-            saveDataToFirebase();
+            showDemographics();
         }
         
         // ====================================================================
