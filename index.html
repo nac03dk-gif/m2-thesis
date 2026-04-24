@@ -234,14 +234,18 @@
         const RT_MAX = 2000;
         
         const PRACTICE_TRIALS_COUNT = 10;
+        const DEBUG_MODE = true;
         
-        const SHAPES = [
+        const SHAPES_POOL = [
             { type: 'square', color: '#FF0000', name: 'carré rouge' },
             { type: 'triangle', color: '#0000FF', name: 'triangle bleu' },
             { type: 'circle', color: '#00FF00', name: 'rond vert' },
             { type: 'star', color: '#FFFF00', name: 'étoile jaune' },
             { type: 'diamond', color: '#800080', name: 'losange violet' }
         ];
+        let SHAPES = [];
+        let shapeOrder = [];
+
         
         const RESPONSE_RULES = {
             1: { 
@@ -316,6 +320,27 @@
             }
             return shuffled;
         }
+
+        function initializeShapeOrder() {
+            SHAPES = shuffleArray(SHAPES_POOL);
+            shapeOrder = SHAPES.map(s => s.type);
+        }
+
+        function showDebugBanner() {
+            if (!DEBUG_MODE) return;
+            const old = document.getElementById('debug-banner');
+            if (old) old.remove();
+            const banner = document.createElement('div');
+            banner.id = 'debug-banner';
+            banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:rgba(255,0,0,0.85);color:white;padding:8px 15px;font-size:13px;z-index:9999;font-family:monospace;';
+            banner.innerHTML = '⚠️ DEBUG | '
+                + SHAPES.map((s, i) => {
+                    const label = i === 2 ? ' (REF)' : '';
+                    return '<strong>' + i + '</strong>: ' + s.name + label;
+                }).join(' → ')
+                + ' | Règles: [' + ruleOrder.join(',') + ']';
+            document.body.prepend(banner);
+        }
         
         function createLearningTrials() {
             const pairs = [[0, 1], [1, 2], [2, 3], [3, 4]];
@@ -327,13 +352,13 @@
                         trials.push({
                             left_item: pair[0],
                             right_item: pair[1],
-                            correct_response: 'm'
+                            correct_response: 'q'
                         });
                     } else {
                         trials.push({
                             left_item: pair[1],
                             right_item: pair[0],
-                            correct_response: 'q'
+                            correct_response: 'm'
                         });
                     }
                 }
@@ -552,6 +577,14 @@
                 session_id: sessionId,
                 timestamp: new Date().toISOString(),
                 rule_order: ruleOrder,
+                shape_order: shapeOrder,
+                shape_hierarchy: {
+                    rank_0_best: SHAPES[0].name,
+                    rank_1: SHAPES[1].name,
+                    rank_2_reference: SHAPES[2].name,
+                    rank_3: SHAPES[3].name,
+                    rank_4_worst: SHAPES[4].name
+                },
                 experiment_duration: Date.now() - window.experimentStartTime,
                 trials: allData
             };
@@ -647,6 +680,8 @@
                     [4, 1, 2, 3]
                 ];
                 ruleOrder = orders[orderIndex];
+                initializeShapeOrder();
+                showDebugBanner();
         
                 showLearningInstructions();
             }).catch(function(error) {
@@ -654,6 +689,8 @@
                 // Fallback en cas d'erreur réseau
                 participantId = 'P_' + Date.now();
                 ruleOrder = [1, 2, 3, 4];
+                initializeShapeOrder();
+                showDebugBanner();
                 showLearningInstructions();
             });
         }
@@ -846,6 +883,7 @@
         
         function showTestInstructions() {
             const referenceShapeHTML = createShapeHTML(2);
+            const referenceName = SHAPES[2].name;
             
             showScreen(`
                 <div class="instruction-text">
@@ -857,11 +895,11 @@
                         <div style="display: flex; justify-content: center;">
                             ${referenceShapeHTML}
                         </div>
-                        <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;">Le <strong>rond vert</strong></p>
+                        <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;">Le <strong>${referenceName}</strong></p>
                     </div>
                     <br>
                     <p>Maintenant, tu vas voir des formes individuelles et des flèches.</p>
-                    <p>Certaines formes <strong>GAGNENT</strong> face au rond vert, d'autres <strong>PERDENT</strong>.</p>
+                    <p>Certaines formes <strong>GAGNENT</strong> face au ${referenceName}, d'autres <strong>PERDENT</strong>.</p>
                     <br>
                     <p>Ta tâche : appuyer sur <strong>ESPACE</strong> quand la forme qui s'affiche correspond à la règle.</p>
                     <br>
