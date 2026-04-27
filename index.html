@@ -338,11 +338,15 @@
             const banner = document.createElement('div');
             banner.id = 'debug-banner';
             banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:rgba(255,0,0,0.85);color:white;padding:8px 15px;font-size:13px;z-index:9999;font-family:monospace;';
+            // Affiche dans l'ordre croissant de magnitude (small à gauche → large à droite)
+            // Magnitude 1 (small/gauche) = perd contre tout le monde
+            // Magnitude 5 (large/droite) = gagne contre tout le monde
             banner.innerHTML = '⚠️ DEBUG | '
                 + SHAPES.map((s, i) => {
+                    const magnitude = i + 1; // magnitude 1 à 5
                     const label = i === 2 ? ' (REF)' : '';
-                    return '<strong>' + i + '</strong>: ' + s.name + label;
-                }).join(' → ')
+                    return '<strong>M' + magnitude + '</strong>: ' + s.name + label;
+                }).join(' ← ')
                 + ' | Règles: [' + ruleOrder.join(',') + ']';
             document.body.prepend(banner);
         }
@@ -1009,7 +1013,7 @@
             showScreen(createSingleStimulusHTML(trial.stimulus_type, trial.stimulus_idx));
             
             const trialStart = Date.now();
-            let responded = false;
+            let responded = false; 
             
             function handleResponse(e) {
                 if (e.key === ' ' && !responded) {
