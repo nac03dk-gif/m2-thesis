@@ -372,7 +372,9 @@
             const referenceIdx = 2;
             let trials = [];
             
-            // Détermine quelle magnitude doit être "go" selon la règle
+            // Détermine quelle magnitude doit être "go" selon la règle: 
+            // Si la règle est 1 ou 2 (GO quand la forme PERD) → goMagnitude = 'small' → les formes qui perdent (indices 0, 1)
+            // Sinon (règle 3 ou 4, GO quand la forme GAGNE) → goMagnitude = 'large' → les formes qui gagnent (indices 3, 4)
             const goMagnitude = (ruleCondition === 1 || ruleCondition === 2) ? 'small' : 'large';
             
             // Créer les essais avec les formes
