@@ -528,13 +528,28 @@
             }
         
                 // Écran d'intro de l'entraînement
+                // Écran d'intro de l'entraînement avec les mêmes consignes que le bloc
+                const rule = RESPONSE_RULES[ruleCondition];
+                const referenceShapeHTML = createShapeHTML(2);
+                const referenceName = SHAPES[2].name;
+                
                 showScreen(`
                     <div class="instruction-text">
-                        <h2>ENTRAÎNEMENT À LA TÂCHE PRINCIPALE</h2>
+                        <h2>ENTRAÎNEMENT — BLOC 1</h2>
                         <br>
-                        <p>Avant de commencer, vous allez réaliser <strong>10 essais d'entraînement</strong> avec feedback.</p>
+                        <div style="text-align: center; margin: 30px 0; background-color: #555; padding: 20px; border-radius: 10px;">
+                            <p style="font-size: 22px; margin-bottom: 15px;"><strong>Forme de référence :</strong></p>
+                            <div style="display: flex; justify-content: center;">
+                                ${referenceShapeHTML}
+                            </div>
+                            <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;">Le <strong>${referenceName}</strong></p>
+                        </div>
                         <br>
-                        <p>Appuie sur <strong>ESPACE</strong> pour démarrer</p>
+                        <p style="font-size: 22px;">${rule.instruction}</p>
+                        <br>
+                        <p>Vous allez réaliser <strong>${PRACTICE_TRIALS_COUNT} essais d'entraînement</strong> avec feedback.</p>
+                        <br>
+                        <p style="text-align: center;">Appuyez sur <strong>ESPACE</strong> pour démarrer</p>
                     </div>
                 `);
                 document.addEventListener('keydown', function spacePractice(e) {
