@@ -251,22 +251,22 @@
             1: { 
                 small_condition: 'left', 
                 large_condition: 'right',
-                instruction: 'Appuie sur ESPACE si :<br><br>• La forme PERD face à la référence<br>• OU la flèche pointe vers la GAUCHE<br><br>Sinon, ne fais RIEN'
+                instruction: 'Appuyez sur ESPACE si :<br><br>• La forme PERD face à la référence<br>• OU si la flèche pointe vers la GAUCHE<br><br>Sinon, ne faites RIEN'
             },
             2: { 
                 small_condition: 'right', 
                 large_condition: 'left',
-                instruction: 'Appuie sur ESPACE si :<br><br>• La forme PERD face à la référence<br>• OU la flèche pointe vers la DROITE<br><br>Sinon, ne fais RIEN'
+                instruction: 'Appuyez sur ESPACE si :<br><br>• La forme PERD face à la référence<br>• OU si la flèche pointe vers la DROITE<br><br>Sinon, ne faites RIEN'
             },
             3: { 
                 small_condition: 'right', 
                 large_condition: 'right',
-                instruction: 'Appuie sur ESPACE si :<br><br>• La forme GAGNE face à la référence<br>• OU la flèche pointe vers la DROITE<br><br>Sinon, ne fais RIEN'
+                instruction: 'Appuyez sur ESPACE si :<br><br>• La forme GAGNE face à la référence<br>• OU si la flèche pointe vers la DROITE<br><br>Sinon, ne faites RIEN'
             },
             4: { 
                 small_condition: 'left', 
                 large_condition: 'left',
-                instruction: 'Appuie sur ESPACE si :<br><br>• La forme GAGNE face à la référence<br>• OU la flèche pointe vers la GAUCHE<br><br>Sinon, ne fais RIEN'
+                instruction: 'Appuyez sur ESPACE si :<br><br>• La forme GAGNE face à la référence<br>• OU si la flèche pointe vers la GAUCHE<br><br>Sinon, ne faites RIEN'
             }
         };
         
@@ -291,8 +291,8 @@
                     <div>${createShapeHTML(rightIndex)}</div>
                 </div>
                 <div class="key-hint">
-                    <span style="margin-right: 80px;">Appuie sur <strong>Q</strong> pour GAUCHE</span>
-                    <span style="margin-left: 80px;">Appuie sur <strong>M</strong> pour DROITE</span>
+                    <span style="margin-right: 80px;">Appuyez sur <strong>Q</strong> pour GAUCHE</span>
+                    <span style="margin-left: 80px;">Appuyez sur <strong>M</strong> pour DROITE</span>
                 </div>
             `;
         }
@@ -372,7 +372,7 @@
             const referenceIdx = 2;
             let trials = [];
             
-            // ✅ AJOUT : Détermine quelle magnitude doit être "go" selon la règle
+            // Détermine quelle magnitude doit être "go" selon la règle
             const goMagnitude = (ruleCondition === 1 || ruleCondition === 2) ? 'small' : 'large';
             
             // Créer les essais avec les formes
@@ -387,14 +387,14 @@
                     (magnitude === 'large' && arrowDirForGo === 'right')
                     ? 'congruent' : 'incongruent';
                 
-                // ✅ FIX : Détermine si c'est go ou nogo selon la magnitude
+                // Détermine si c'est go ou nogo selon la magnitude
                 const correctResponse = magnitude === goMagnitude ? 'go' : 'nogo';
                 
                 trials.push({
                     stimulus_type: 'shape',
                     stimulus_idx: shapeIdx,
                     magnitude: magnitude,
-                    correct_response: correctResponse,  // ✅ Maintenant correct !
+                    correct_response: correctResponse,  // 
                     congruency: congruency
                 });
             }
@@ -404,7 +404,7 @@
                 const isGoSmall = arrowDir === rule.small_condition;
                 const isGoLarge = arrowDir === rule.large_condition;
                 
-                // ✅ FIX : Détermine quelle magnitude doit être "go" pour ce bloc
+                // Détermine quelle magnitude doit être "go" pour ce bloc
                 const goMagnitude = (ruleCondition === 1 || ruleCondition === 2) ? 'small' : 'large';
                 
                 let correctResponse, congruency;
@@ -479,12 +479,12 @@
                 if (currentPracticeTrial >= practiceTrials.length) {
                     showScreen(`
                         <div class="block-feedback">
-                            <h2>✅ Entraînement terminé !</h2>
-                            <p>Les vrais essais vont commencer.<br>
+                            <h2>Entraînement terminé !</h2>
+                            <p>La vraie tâche va commencer.<br>
                             <strong>Il n'y aura plus de feedback.</strong></p>
                             <br>
-                            <p>Appuie sur <strong>ESPACE</strong> pour commencer</p>
-                            <p>Appuie sur <strong>R</strong> pour refaire l'entraînement</p>
+                            <p>Appuyez sur <strong>ESPACE</strong> pour commencer</p>
+                            <p>Appuyez sur <strong>R</strong> pour recommencer l'entraînement</p>
                         </div>
                     `);
                     document.addEventListener('keydown', function spaceOrRetry(e) {
@@ -532,7 +532,7 @@
                     <div class="instruction-text">
                         <h2>ENTRAÎNEMENT À LA TÂCHE PRINCIPALE</h2>
                         <br>
-                        <p>Avant de commencer, tu vas faire <strong>10 essais d'entraînement</strong> avec feedback.</p>
+                        <p>Avant de commencer, vous allez réaliser <strong>10 essais d'entraînement</strong> avec feedback.</p>
                         <br>
                         <p>Appuie sur <strong>ESPACE</strong> pour démarrer</p>
                     </div>
@@ -597,10 +597,10 @@
                     // Succès !
                     showScreen(`
                         <div class="block-feedback">
-                            <h1>✅ Merci !</h1>
-                            <p>Tes données ont été sauvegardées avec succès.</p>
+                            <h1>Merci pour votre participation !</h1>
+                            <p>Vos données ont été sauvegardées avec succès.</p>
                             <br>
-                            <p style="font-size: 18px;">Tu peux maintenant fermer cette fenêtre.</p>
+                            <p style="font-size: 18px;">Vous pouvez maintenant fermer cette fenêtre.</p>
                         </div>
                     `);
                 })
@@ -610,7 +610,7 @@
                     showScreen(`
                         <div class="block-feedback">
                             <h2>⚠️ Erreur de connexion</h2>
-                            <p>Les données vont être téléchargées sur ton ordinateur à la place.</p>
+                            <p>Les données vont être téléchargées sur votre ordinateur à la place.</p>
                             <br>
                             <button onclick="downloadDataBackup()">📥 Télécharger les données</button>
                         </div>
@@ -637,9 +637,9 @@
             
             setTimeout(() => {
                 showScreen(`
-                    <h1>✅ Fichier téléchargé !</h1>
-                    <p>Merci pour ta participation.</p>
-                    <p>Tu peux fermer cette fenêtre.</p>
+                    <h1>Fichier téléchargé !</h1>
+                    <p>Merci pour votre participation.</p>
+                    <p>Vous pouvez fermer cette fenêtre.</p>
                 `);
             }, 500);
         }
@@ -698,8 +698,8 @@
         function showDemographics() {
             showScreen(`
                 <div class="instruction-text">
-                    <h2>Informations générales</h2>
-                    <p>Merci de remplir les informations suivantes avant de commencer.</p>
+                    <h2>Informations démographiques</h2>
+                    <p>Merci de remplir les champs suivants.</p>
                     <br>
         
                     <label><strong>Âge :</strong></label><br>
@@ -765,13 +765,13 @@
                 <div class="instruction-text">
                     <h2>PHASE D'APPRENTISSAGE</h2>
                     <p>Deux formes colorées vont s'afficher à l'écran.</p>
-                    <p>L'objectif : apprendre quelle forme est "meilleure" dans chaque paire.</p>
+                    <p>L'objectif : apprendre quelle forme est la "meilleure" dans chaque paire.</p>
                     <br>
-                    <p><strong>Appuie sur 'Q'</strong> pour choisir la forme de GAUCHE</p>
-                    <p><strong>Appuie sur 'M'</strong> pour choisir la forme de DROITE</p>
+                    <p><strong>Appuyez sur 'Q'</strong> pour choisir la forme de GAUCHE</p>
+                    <p><strong>Appuyez sur 'M'</strong> pour choisir la forme de DROITE</p>
                     <br>
-                    <p>Tu recevras un feedback après chaque choix.</p>
-                    <p>Continue jusqu'à maîtriser la tâche !</p>
+                    <p>Lors de cette phase, vous recevrez un feedback après chaque choix.</p>
+                    <p>L'apprentissage continuera jusqu'à que vous atteignez 95% de réussite !</p>
                     <br>
                     <p style="text-align: center;">Appuie sur <strong>ESPACE</strong> pour commencer</p>
                 </div>
@@ -862,10 +862,10 @@
             showScreen(`
                 <div class="block-feedback">
                     <h2>Bravo !</h2>
-                    <p>Tu as atteint ${(accuracy * 100).toFixed(0)}% de réussite.</p>
+                    <p>Vous avez atteint ${(accuracy * 100).toFixed(0)}% de réussite.</p>
                     <p>Phase d'apprentissage terminée !</p>
                     <br>
-                    <p>Appuie sur <strong>ESPACE</strong> pour continuer vers la phase de test</p>
+                    <p>Appuyez sur <strong>ESPACE</strong> pour continuer vers la phase de test</p>
                 </div>
             `);
             
@@ -898,22 +898,22 @@
                         <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;">Le <strong>${referenceName}</strong></p>
                     </div>
                     <br>
-                    <p>Maintenant, tu vas voir des formes individuelles et des flèches.</p>
-                    <p>Certaines formes <strong>GAGNENT</strong> face au ${referenceName}, d'autres <strong>PERDENT</strong>.</p>
+                    <p>Maintenant, vous allez voir des essais avec des formes individuelles ou des flèches pointant vers la droite ou vers la gauche.</p>
+                    <p>Comme vous l'avez appris précedemment, certaines formes <strong>GAGNENT</strong> face au ${referenceName}, d'autres <strong>PERDENT</strong>.</p>
                     <br>
-                    <p>Ta tâche : appuyer sur <strong>ESPACE</strong> quand la forme qui s'affiche correspond à la règle.</p>
+                    <p>Votre tâche : appuyer sur <strong>ESPACE</strong> quand la forme/flèche qui s'affiche correspond à la règle qui sera donnée.</p>
                     <br>
                     <p>Important :</p>
                     <ul>
-                        <li>Réponds le plus <strong>RAPIDEMENT</strong> possible</li>
-                        <li>Sois <strong>PRÉCIS</strong></li>
-                        <li>Tu as 2 secondes maximum pour répondre</li>
+                        <li>Répondez le plus <strong>RAPIDEMENT</strong> possible</li>
+                        <li>Soyez <strong>PRÉCIS</strong></li>
+                        <li>Vous avez 2 secondes maximum pour répondre</li>
                     </ul>
                     <br>
                     <p>La règle sera montrée au début de chaque bloc.</p>
-                    <p>Il y aura 4 blocs au total.</p>
+                    <p>Il y aura 4 blocs au total, avec une règle différente pour chacun.</p>
                     <br>
-                    <p style="text-align: center;">Appuie sur <strong>ESPACE</strong> pour commencer</p>
+                    <p style="text-align: center;">Appuyez sur <strong>ESPACE</strong> pour commencer</p>
                 </div>
             `);
             
@@ -955,11 +955,11 @@
                     <br>
                     <p><strong>Rappel :</strong></p>
                     <ul>
-                        <li>Réponds aussi vite que possible</li>
-                        <li>Sois le plus précis possible</li>
+                        <li>Répondez aussi vite que possible</li>
+                        <li>Soyez le plus précis possible</li>
                     </ul>
                     <br>
-                    <p style="text-align: center;">Appuie sur <strong>ESPACE</strong> quand tu es prêt(e)</p>
+                    <p style="text-align: center;">Appuyez sur <strong>ESPACE</strong> lorsque vous êtes prêt(e) à commencer</p>
                 </div>
             `);
             
@@ -1082,8 +1082,8 @@
                     <p>Temps de réaction moyen : ${meanRt.toFixed(0)} ms</p>
                     <br>
                     ${currentBlock + 1 < TEST_BLOCKS 
-                        ? '<p>Appuie sur <strong>ESPACE</strong> pour continuer</p>' 
-                        : '<p>Appuie sur <strong>ESPACE</strong> pour terminer</p>'}
+                        ? '<p>Appuyez sur <strong>ESPACE</strong> pour continuer</p>' 
+                        : '<p>Appuyez sur <strong>ESPACE</strong> pour terminer</p>'}
                 </div>
             `);
             
