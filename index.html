@@ -361,13 +361,13 @@
                         trials.push({
                             left_item: pair[0],
                             right_item: pair[1],
-                            correct_response: 'q'
+                            correct_response: 'm'  // ✅ pair[1] = index plus grand = gagnant = droite
                         });
                     } else {
                         trials.push({
                             left_item: pair[1],
                             right_item: pair[0],
-                            correct_response: 'm'
+                            correct_response: 'q'  // ✅ pair[1] = index plus grand = gagnant = gauche
                         });
                     }
                 }
