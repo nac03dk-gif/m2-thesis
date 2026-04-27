@@ -839,20 +839,6 @@
                     accuracyWindow.push(correct ? 1 : 0);
                     const accuracy = calculateRollingAccuracy();
                     
-                    allData.push({
-                        participant: participantId,
-                        session: sessionId,
-                        task: 'learning',
-                        trial: currentLearningTrial,
-                        left_item: trial.left_item,
-                        right_item: trial.right_item,
-                        correct_response: trial.correct_response,
-                        participant_response: e.key,
-                        correct: correct,
-                        rt: rt,
-                        rolling_accuracy: accuracy
-                    });
-                    
                     currentLearningTrial++;
                     showFeedback(correct);
                 }
