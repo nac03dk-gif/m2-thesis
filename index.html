@@ -376,11 +376,28 @@
             const rule = RESPONSE_RULES[ruleCondition];
             const referenceIdx = 2;
             let trials = [];
+
+
+            // Détermine quelle magnitude doit être "go" selon la règle :
+            // Règles 1, 2 : GO si PERD → perdants = indices 0,1 = magnitude "small"
+            // Règles 3, 4 : GO si GAGNE → gagnants = indices 3,4 = magnitude "large"
             
             // Détermine quelle magnitude doit être "go" selon la règle: 
             // Si la règle est 1 ou 2 (GO quand la forme PERD) → goMagnitude = 'small' → les formes qui perdent (indices 0, 1)
             // Sinon (règle 3 ou 4, GO quand la forme GAGNE) → goMagnitude = 'large' → les formes qui gagnent (indices 3, 4)
             const goMagnitude = (ruleCondition === 1 || ruleCondition === 2) ? 'small' : 'large';
+
+
+                // --- ESSAIS FORMES ---
+                // Pour chaque forme (sauf la référence), on détermine :
+                // 1) Sa magnitude (small ou large) selon sa position dans la hiérarchie
+                // 2) Si c'est un essai GO ou NOGO (selon goMagnitude)
+                // 3) Sa congruence SNARC (small+gauche ou large+droite = congruent)
+
+                // --- ESSAIS FLÈCHES ---
+                // La flèche est GO si sa direction correspond à la condition de la magnitude GO.
+                // Ex: Règle 1 → goMagnitude = small → small_condition = 'left' → flèche gauche = GO
+                // Congruence des flèches : gauche = congruent (associé à small), droite = incongruent
             
             // Créer les essais avec les formes
             for (let shapeIdx = 0; shapeIdx < 5; shapeIdx++) {
