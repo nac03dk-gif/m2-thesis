@@ -390,6 +390,7 @@
                     ? 'congruent' : 'incongruent';
                 
                 // Détermine si c'est go ou nogo selon la magnitude
+                // Si la magnitude de la forme présentée correspond à goMagnitude, le participant doit appuyer (go), sinon il ne fait rien (nogo).
                 const correctResponse = magnitude === goMagnitude ? 'go' : 'nogo';
                 
                 trials.push({
