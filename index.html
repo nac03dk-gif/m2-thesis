@@ -341,12 +341,12 @@
             // Affiche dans l'ordre croissant de magnitude (small à gauche → large à droite)
             // Magnitude 1 (small/gauche) = perd contre tout le monde
             // Magnitude 5 (large/droite) = gagne contre tout le monde
-            banner.innerHTML = '⚠️ DEBUG | '
+            banner.innerHTML = '⚠️ DEBUG | Hiérarchie (perd → gagne): '
                 + SHAPES.map((s, i) => {
-                    const magnitude = i + 1; // magnitude 1 à 5
-                    const label = i === 2 ? ' (REF)' : '';
-                    return '<strong>M' + magnitude + '</strong>: ' + s.name + label;
-                }).join(' ← ')
+                    const magnitude = i + 1;
+                    const label = i === 2 ? '(REF)' : (i < 2 ? '(perd)' : '(gagne)');
+                    return 'M' + magnitude + ' ' + label + ': ' + s.name;
+                }).join(' → ')
                 + ' | Règles: [' + ruleOrder.join(',') + ']';
             document.body.prepend(banner);
         }
