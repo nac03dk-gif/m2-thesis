@@ -835,6 +835,16 @@
         function startLearning() {
             learningTrials = createLearningTrials();
             currentLearningTrial = 0;
+
+            if (DEBUG_MODE) {
+                document.addEventListener('keydown', function skipLearning(e) {
+                    if (e.key === 's' || e.key === 'S') {
+                        document.removeEventListener('keydown', skipLearning);
+                        showLearningComplete();
+                    }
+                });
+            }
+            
             showFixation(() => showLearningTrial());
         }
         
