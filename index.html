@@ -905,7 +905,7 @@
         function showLearningComplete() {
             const accuracy = calculateRollingAccuracy();
             showScreen(`
-                <div class="instruction-text" style="text-align: center;">
+                <div class="block-feedback">
                     <h2>Bravo !</h2>
                     <p>Vous avez atteint ${(accuracy * 100).toFixed(0)}% de réussite.</p>
                     <p>La phase d'apprentissage est terminée !</p>
