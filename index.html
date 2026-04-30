@@ -234,7 +234,7 @@
         const TEST_BLOCKS = 4;
         const TRIALS_PER_BLOCK = 70;
         const STIMULUS_DURATION = 2000;
-        const RT_MIN = 100;
+        const RT_MIN = 0;
         const RT_MAX = 2000;
         
         const PRACTICE_TRIALS_COUNT = 10;
@@ -570,15 +570,15 @@
                     <div class="instruction-text">
                         <h2>ENTRAÎNEMENT — BLOC 1</h2>
                         <br>
-                        <div style="text-align: center; margin: 30px 0; background-color: #555; padding: 20px; border-radius: 10px;">
-                            <p style="font-size: 22px; margin-bottom: 15px;"><strong>Forme de référence :</strong></p>
+                        <div style="text-align: center; margin: 20px 0; background-color: #555; padding: 20px; border-radius: 10px;">
+                            <p style="font-size: 20px; margin-bottom: 10px;"><strong>Forme de référence :</strong></p>
                             <div style="display: flex; justify-content: center;">
                                 ${referenceShapeHTML}
                             </div>
                             <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;">Le <strong>${referenceName}</strong></p>
                         </div>
                         <br>
-                        <p style="font-size: 22px;">${rule.instruction}</p>
+                        <p style="font-size: 20px;">${rule.instruction}</p>
                         <br>
                         <p>Vous allez réaliser <strong>${PRACTICE_TRIALS_COUNT} essais d'entraînement</strong> avec feedback.</p>
                         <br>
@@ -813,7 +813,7 @@
                 <div class="instruction-text">
                     <h2>PHASE D'APPRENTISSAGE</h2>
                     <p>Deux formes colorées vont s'afficher à l'écran.</p>
-                    <p>L'objectif : apprendre quelle forme est la "meilleure" dans chaque paire.</p>
+                    <p>L'objectif : apprendre quelle forme gagne par rapport à l'autre dans chaque paire.</p>
                     <br>
                     <p><strong>Appuyez sur 'Q'</strong> pour choisir la forme de GAUCHE</p>
                     <p><strong>Appuyez sur 'M'</strong> pour choisir la forme de DROITE</p>
@@ -897,7 +897,7 @@
                 <div class="block-feedback">
                     <h2>Bravo !</h2>
                     <p>Vous avez atteint ${(accuracy * 100).toFixed(0)}% de réussite.</p>
-                    <p>Phase d'apprentissage terminée !</p>
+                    <p>La phase d'apprentissage terminée !</p>
                     <br>
                     <p>Appuyez sur <strong>ESPACE</strong> pour continuer vers la phase de test</p>
                 </div>
@@ -924,8 +924,8 @@
                     <h2>PHASE DE TEST</h2>
                     <p>Instructions </p>
                     <br>
-                    <div style="text-align: center; margin: 30px 0; background-color: #555; padding: 20px; border-radius: 10px;">
-                        <p style="font-size: 22px; margin-bottom: 15px;"><strong>Voici la forme de RÉFÉRENCE :</strong></p>
+                    <div style="text-align: center; margin: 20px 0; background-color: #555; padding: 20px; border-radius: 10px;">
+                        <p style="font-size: 20px; margin-bottom: 15px;"><strong>Voici la forme de RÉFÉRENCE :</strong></p>
                         <div style="display: flex; justify-content: center;">
                             ${referenceShapeHTML}
                         </div>
@@ -939,12 +939,11 @@
                     <br>
                     <p>Important :</p>
                     <ul>
-                        <li>Répondez le plus <strong>RAPIDEMENT</strong> possible</li>
-                        <li>Soyez <strong>PRÉCIS</strong></li>
+                        <li>Répondez le plus <strong>RAPIDEMENT</strong> et <strong>PRÉCISEMENT</strong> possible</li>
                         <li>Vous avez 2 secondes maximum pour répondre</li>
                     </ul>
                     <br>
-                    <p>La règle sera montrée au début de chaque bloc.</p>
+                    <p>Une règle pour les flèches/formes sera donnée au début de chaque bloc.</p>
                     <p>Il y aura 4 blocs au total, avec une règle différente pour chacun.</p>
                     <br>
                     <p style="text-align: center;">Appuyez sur <strong>ESPACE</strong> pour commencer</p>
@@ -977,8 +976,8 @@
                 <div class="instruction-text">
                     <h2>BLOC ${currentBlock + 1} sur ${TEST_BLOCKS}</h2>
                     <br>
-                    <div style="text-align: center; margin: 30px 0;">
-                        <p style="font-size: 22px; margin-bottom: 15px;"><strong>Forme de référence :</strong></p>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <p style="font-size: 20px; margin-bottom: 15px;"><strong>Forme de référence :</strong></p>
                         <div style="display: flex; justify-content: center;">
                             ${referenceShapeHTML}
                         </div>
