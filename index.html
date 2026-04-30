@@ -895,11 +895,19 @@
             const feedbackClass = correct ? 'feedback-correct' : 'feedback-incorrect';
             const feedbackText = correct ? 'Correct !' : 'Incorrect';
             
-            showScreen(`<div class="${feedbackClass}">${feedbackText}</div>`);
+            showScreen(`
+                <div>
+                    <div class="${feedbackClass}">${feedbackText}</div>
+                    <p style="color: white; margin-top: 20px;">Appuyez sur <strong>ESPACE</strong> pour continuer</p>
+                </div>
+            `);
             
-            setTimeout(() => {
-                showFixation(() => showLearningTrial());
-            }, 800);
+            document.addEventListener('keydown', function spaceFeedback(e) {
+                if (e.key === ' ') {
+                    document.removeEventListener('keydown', spaceFeedback);
+                    showFixation(() => showLearningTrial());
+                }
+            });
         }
         
         function showLearningComplete() {
