@@ -921,15 +921,13 @@
             
             showScreen(`
                 <div class="instruction-text">
-                    <h2>PHASE DE TEST</h2>
-                    <p>Instructions </p>
+                    <h2>PHASE DE TEST : INSTRUCTIONS</h2>
                     <br>
-                    <div style="text-align: center; margin: 20px 0; background-color: #555; padding: 20px; border-radius: 10px;">
+                    <div style="text-align: center; margin: 10px 0; background-color: #555; padding: 20px; border-radius: 10px;">
                         <p style="font-size: 20px; margin-bottom: 15px;"><strong>Voici la forme de RÉFÉRENCE :</strong></p>
                         <div style="display: flex; justify-content: center;">
                             ${referenceShapeHTML}
                         </div>
-                        <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;">Le <strong>${referenceName}</strong></p>
                     </div>
                     <br>
                     <p>Maintenant, vous allez voir des essais avec des formes individuelles ou des flèches pointant vers la droite ou vers la gauche.</p>
@@ -976,21 +974,16 @@
                 <div class="instruction-text">
                     <h2>BLOC ${currentBlock + 1} sur ${TEST_BLOCKS}</h2>
                     <br>
-                    <div style="text-align: center; margin: 20px 0;">
+                    <div style="text-align: center; margin: 10px 0;">
                         <p style="font-size: 20px; margin-bottom: 15px;"><strong>Forme de référence :</strong></p>
                         <div style="display: flex; justify-content: center;">
                             ${referenceShapeHTML}
                         </div>
-                        <p style="font-size: 18px; margin-top: 15px; color: #FFFF99;"> Ceci est la forme de référence </p>
                     </div>
                     <br>
-                    <p style="font-size: 22px;">${rule.instruction}</p>
+                    <p style="font-size: 20px;">${rule.instruction}</p>
                     <br>
-                    <p><strong>Rappel :</strong></p>
-                    <ul>
-                        <li>Répondez aussi vite que possible</li>
-                        <li>Soyez le plus précis possible</li>
-                    </ul>
+                    <p><strong>Rappel :</strong> répondez aussi rapidement et précisément que possible</p>
                     <br>
                     <p style="text-align: center;">Appuyez sur <strong>ESPACE</strong> lorsque vous êtes prêt(e) à commencer</p>
                 </div>
