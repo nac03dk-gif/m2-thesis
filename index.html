@@ -816,7 +816,14 @@
                 dexterite: dexterite.value,
                 sens_lecture: lecture.value
             });
+
+            // Sauvegarde directe dans Firebase sous participants/P001/demographics
+            database.ref('participants/' + participantId + '/demographics')
+                .set(demoData)
+                .catch(err => console.error("Erreur sauvegarde demographics:", err));
         
+            allData.push({ task: 'demographics', participant: participantId, ...demoData });
+
             saveDataToFirebase();
         }
         
