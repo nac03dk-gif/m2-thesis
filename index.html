@@ -929,12 +929,13 @@
                 </div>
             `);
             
-            document.addEventListener('keydown', function spaceFeedback(e) {
+            function spaceFeedback(e) {
                 if (e.key === ' ') {
                     document.removeEventListener('keydown', spaceFeedback);
                     showFixation(() => showLearningTrial());
                 }
-            });
+            }
+            document.addEventListener('keydown', spaceFeedback);
         }
         
         function showLearningComplete() {
