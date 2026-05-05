@@ -241,6 +241,7 @@
         
         const LEARNING_ACCURACY_THRESHOLD = 0.95;
         const LEARNING_WINDOW_SIZE = 10;
+        const MIN_LEARNING_TRIALS = 60; 
         const TEST_BLOCKS = 4;
         const TRIALS_PER_BLOCK = 70;
         const STIMULUS_DURATION = 2000;
@@ -370,7 +371,7 @@
             let trials = [];
             
             pairs.forEach(pair => {
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 15; i++) {
                     if (Math.random() < 0.5) {
                         trials.push({
                             left_item: pair[0],
@@ -869,7 +870,8 @@
         function showLearningTrial() {
             if (currentLearningTrial >= learningTrials.length) {
                 const accuracy = calculateRollingAccuracy();
-                if (accuracy !== null && accuracy >= LEARNING_ACCURACY_THRESHOLD) {
+                const enoughTrials = accuracyWindow.length >= MIN_LEARNING_TRIALS;
+                if (enoughTrials && accuracy !== null && accuracy >= LEARNING_ACCURACY_THRESHOLD) {
                     showLearningComplete();
                 } else {
                     learningTrials = createLearningTrials();
@@ -878,7 +880,7 @@
                 }
                 return;
             }
-            
+                
             const trial = learningTrials[currentLearningTrial];
             showScreen(createPairHTML(trial.left_item, trial.right_item));
             
