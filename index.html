@@ -456,7 +456,9 @@
                 if ((goMagnitude === 'small' && isGoSmall) || (goMagnitude === 'large' && isGoLarge)) {
                     correctResponse = 'go';
                     // Congruence : flèche gauche = congruent avec small, droite = congruent avec large
-                    congruency = (arrowDir === 'left') ? 'congruent' : 'incongruent';
+                    congruency = ((arrowDir === 'left' && goMagnitude === 'small') || 
+                                  (arrowDir === 'right' && goMagnitude === 'large'))
+                                 ? 'congruent' : 'incongruent';
                 } else {
                     correctResponse = 'nogo';
                     congruency = 'nogo';
