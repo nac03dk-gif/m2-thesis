@@ -939,6 +939,12 @@
         
         function showLearningComplete() {
             const accuracy = calculateRollingAccuracy();
+
+            // Sauvegarde intermédiaire des données d'apprentissage
+            const dataRef = database.ref('participants/' + participantId + '/learning');
+            dataRef.set({ trials: allData.filter(d => d.task === 'learning') })
+                .catch(err => console.error("Erreur sauvegarde learning:", err));
+            
             showScreen(`
                 <div class="block-feedback">
                     <h2>Bravo !</h2>
