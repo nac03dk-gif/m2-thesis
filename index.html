@@ -615,93 +615,7 @@
                     const target = document.getElementById('jspsych-target');
                     target.innerHTML = `<div class="jspsych-content">${html}</div>`;
                 }
-        
-        // ====================================================================
-        // SAUVEGARDE DES DONNÉES (NOUVELLE VERSION AVEC FIREBASE)
-        // ====================================================================
-        
-        function saveDataToFirebase() {
-            // Affiche message de chargement
-            showScreen(`
-                <div class="block-feedback">
-                    <h2>⏳ Sauvegarde en cours...</h2>
-                    <div class="spinner"></div>
-                    <p>Ne ferme pas cette fenêtre.</p>
-                </div>
-            `);
-            
-            // Prépare les données
-            const dataToSave = {
-                participant_id: participantId,
-                session_id: sessionId,
-                timestamp: new Date().toISOString(),
-                rule_order: ruleOrder,
-                shape_order: shapeOrder,
-                shape_hierarchy: {
-                    rank_0_worst: SHAPES[0].name,
-                    rank_1: SHAPES[1].name,
-                    rank_2_reference: SHAPES[2].name,
-                    rank_3: SHAPES[3].name,
-                    rank_4_best: SHAPES[4].name
-                },
-                experiment_duration: Date.now() - window.experimentStartTime,
-                trials: allData
-            };
-            
-            // Sauvegarde dans Firebase
-            const dataRef = database.ref('participants/' + participantId + '_' + Date.now());
-            
-            dataRef.set(dataToSave)
-                .then(() => {
-                    // Succès !
-                    showScreen(`
-                        <div class="block-feedback">
-                            <h1>Merci pour votre participation !</h1>
-                            <p>Vos données ont été sauvegardées avec succès.</p>
-                            <br>
-                            <p style="font-size: 18px;">Vous pouvez maintenant fermer cette fenêtre.</p>
-                        </div>
-                    `);
-                })
-                .catch((error) => {
-                    // Erreur : propose téléchargement local
-                    console.error("Erreur Firebase:", error);
-                    showScreen(`
-                        <div class="block-feedback">
-                            <h2>⚠️ Erreur de connexion</h2>
-                            <p>Les données vont être téléchargées sur votre ordinateur à la place.</p>
-                            <br>
-                            <button onclick="downloadDataBackup()">📥 Télécharger les données</button>
-                        </div>
-                    `);
-                });
-        }
-        
-        // Fonction de backup (téléchargement local)
-        function downloadDataBackup() {
-            const dataStr = JSON.stringify({
-                participant_id: participantId,
-                session_id: sessionId,
-                timestamp: new Date().toISOString(),
-                rule_order: ruleOrder,
-                trials: allData
-            }, null, 2);
-            
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `backup_${participantId}_${new Date().toISOString()}.json`;
-            link.click();
-            
-            setTimeout(() => {
-                showScreen(`
-                    <h1>Fichier téléchargé !</h1>
-                    <p>Merci pour votre participation.</p>
-                    <p>Vous pouvez fermer cette fenêtre.</p>
-                `);
-            }, 500);
-        }
+         
         
         // ====================================================================
         // PHASE D'APPRENTISSAGE
@@ -824,7 +738,14 @@
         
             allData.push({ task: 'demographics', participant: participantId, ...demoData });
 
-            saveDataToFirebase();
+            showScreen(`
+                <div class="block-feedback">
+                    <h1>Merci pour votre participation !</h1>
+                    <p>Vos données ont été sauvegardées avec succès.</p>
+                    <br>
+                    <p style="font-size: 18px;">Vous pouvez maintenant fermer cette fenêtre.</p>
+                </div>
+            `);
         }
         
         function showLearningInstructions() {
