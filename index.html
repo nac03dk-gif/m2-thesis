@@ -715,32 +715,27 @@
             const dexterite = document.querySelector('input[name="dexterite"]:checked');
             const lecture = document.querySelector('input[name="lecture"]:checked');
         
-            // Vérifie que tout est rempli
             if (!age || !genre || !dexterite || !lecture) {
                 alert('Merci de remplir tous les champs avant de continuer.');
                 return;
             }
         
-            // Sauvegarde dans allData
-            allData.push({
-                task: 'demographics',
-                participant: participantId,
+            const demoData = {
                 age: parseInt(age),
                 genre: genre.value,
                 dexterite: dexterite.value,
                 sens_lecture: lecture.value
-            });
-
-            // Sauvegarde directe dans Firebase sous participants/P001/demographics
+            };
+        
             database.ref('participants/' + participantId + '/demographics')
                 .set(demoData)
                 .catch(err => console.error("Erreur sauvegarde demographics:", err));
-
+        
             database.ref('completed_counter').transaction(cv => (cv || 0) + 1)
                 .catch(err => console.error("Erreur completed_counter:", err));
         
             allData.push({ task: 'demographics', participant: participantId, ...demoData });
-
+        
             showScreen(`
                 <div class="block-feedback">
                     <h1>Merci pour votre participation !</h1>
