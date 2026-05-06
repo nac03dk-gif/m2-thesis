@@ -735,6 +735,9 @@
             database.ref('participants/' + participantId + '/demographics')
                 .set(demoData)
                 .catch(err => console.error("Erreur sauvegarde demographics:", err));
+
+            database.ref('completed_counter').transaction(cv => (cv || 0) + 1)
+                .catch(err => console.error("Erreur completed_counter:", err));
         
             allData.push({ task: 'demographics', participant: participantId, ...demoData });
 
