@@ -657,6 +657,15 @@
                 ];
                 ruleOrder = orders[orderIndex];
                 initializeShapeOrder();
+                database.ref('participants/' + participantId + '/shape_order')
+                    .set(SHAPES.map((s, i) => ({
+                        position: i,
+                        type: s.type,
+                        color: s.color,
+                        name: s.name,
+                        magnitude: i + 1
+                    })))
+                    .catch(err => console.error("Erreur sauvegarde shape_order:", err));
                 showDebugBanner();
         
                 showLearningInstructions();
@@ -666,6 +675,15 @@
                 participantId = 'P_' + Date.now();
                 ruleOrder = [1, 2, 3, 4];
                 initializeShapeOrder();
+                database.ref('participants/' + participantId + '/shape_order')
+                    .set(SHAPES.map((s, i) => ({
+                        position: i,
+                        type: s.type,
+                        color: s.color,
+                        name: s.name,
+                        magnitude: i + 1
+                    })))
+                    .catch(err => console.error("Erreur sauvegarde shape_order:", err));
                 showDebugBanner();
                 showLearningInstructions();
             });
