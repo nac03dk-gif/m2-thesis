@@ -626,7 +626,8 @@
                 <div class="instruction-text" style="text-align: center;">
                     <h2>Expérience en psychologie cognitive</h2>
                     <h3>Bienvenue !</h3>
-                    <p> Cette expérience est réalisée dans le cadre de mon mémoire de M2 du Master Economie et Psychologie (Paris 1 Panthéon-Sorbonne & Paris Cité), supervisé par André Knops. Pour toutes questions relatives à cette expérience, vous pouvez me contacter à l'adresse suivante : Nelly.Adam@etu.univ-paris1.fr</p>
+                    <p> Cette expérience est réalisée dans le cadre de mon mémoire de M2 du Master Economie et Psychologie (Paris 1 Panthéon-Sorbonne & Paris Cité), supervisé par André Knops. À la fin de l’expérience, il vous sera demandé de répondre à un bref questionnaire démographique. Les données récoltées sont anonymes et utilisées uniquement à des fins de recherche. </p>
+                    <p> Pour toutes questions relatives à cette expérience, vous pouvez me contacter à l'adresse suivante : Nelly.Adam@etu.univ-paris1.fr </p>
                     <br><br>
                     <button onclick="startExperiment()">Commencer l'expérience</button>
                 </div>
@@ -1100,9 +1101,9 @@
                         const percentileWorse = Math.round((above / otherScores.length) * 100);
         
                         if (percentileBetter >= 50) {
-                            percentileHTML = `<p style="color: #FFE066;">🏅 Vous avez mieux répondu que <strong>${percentileBetter}%</strong> des participants sur ce bloc.</p>`;
+                            percentileHTML = `<p style="color: #FFE066;">🏅 Bravo ! Vous avez obtenu un meilleur score que <strong>${percentileBetter}%</strong> des participant·e·s sur ce bloc. Continuez comme ça ! </p>`;
                         } else {
-                            percentileHTML = `<p style="color: #FFAA44;">📊 <strong>${percentileWorse}%</strong> des participants ont mieux répondu que vous sur ce bloc.<br>Vous pouvez faire mieux au prochain !</p>`;
+                            percentileHTML = `<p style="color: #FFAA44;">📊 <strong>${percentileWorse}%</strong> des participant·e·s ont obtenu un meilleur score que vous sur ce bloc.<br>Vous pouvez faire mieux au prochain !</p>`;
                         }
                     }
         
