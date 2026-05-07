@@ -1050,6 +1050,10 @@
         }
         
         function showBlockFeedback() {
+            const blockNum = currentBlock + 1;
+            const ruleCondition = ruleOrder[currentBlock];
+        
+            // Sauvegarde intermédiaire existante
             const dataToSave = {
                 participant_id: participantId,
                 session_id: sessionId,
@@ -1058,38 +1062,96 @@
                 experiment_duration: Date.now() - window.experimentStartTime,
                 trials: allData
             };
-            const dataRef = database.ref('participants/' + participantId + '/bloc_' + (currentBlock + 1));
-            dataRef.set(dataToSave).catch(function(error) {
-                console.error("Erreur sauvegarde intermédiaire:", error);
-            });
+            database.ref('participants/' + participantId + '/bloc_' + blockNum)
+                .set(dataToSave)
+                .catch(err => console.error("Erreur sauvegarde intermédiaire:", err));
         
-            const blockData = allData.filter(d => d.task === 'test' && d.block === currentBlock + 1);
+            const blockData = allData.filter(d => d.task === 'test' && d.block === blockNum);
             const accuracy = blockData.filter(d => d.correct).length / blockData.length;
             const validRts = blockData.filter(d => d.rt !== null && d.valid_rt).map(d => d.rt);
-            const meanRt = validRts.length > 0 
-                ? validRts.reduce((a, b) => a + b, 0) / validRts.length 
+            const meanRt = validRts.length > 0
+                ? validRts.reduce((a, b) => a + b, 0) / validRts.length
                 : 0;
-            
-            showScreen(`
-                <div class="block-feedback">
-                    <h2>Bloc ${currentBlock + 1} terminé !</h2>
-                    <br>
-                    <p>Précision : ${(accuracy * 100).toFixed(1)}%</p>
-                    <p>Temps de réaction moyen : ${meanRt.toFixed(0)} ms</p>
-                    <br>
-                    ${currentBlock + 1 < TEST_BLOCKS 
-                        ? '<p>Appuyez sur <strong>ESPACE</strong> pour continuer</p>' 
-                        : '<p>Appuyez sur <strong>ESPACE</strong> pour terminer</p>'}
-                </div>
-            `);
-            
-            document.addEventListener('keydown', function spaceNextBlock(e) {
-                if (e.key === ' ') {
-                    document.removeEventListener('keydown', spaceNextBlock);
-                    currentBlock++;
-                    startTestBlock();
-                }
-            });
+        
+            // 1. Sauvegarde du score dans le nœud partagé
+            database.ref('block_scores/block_' + blockNum + '/' + participantId)
+                .set(accuracy)
+                .then(() => {
+                    // 2. Lit tous les scores du bloc pour calculer le percentile
+                    return database.ref('block_scores/block_' + blockNum).once('value');
+                })
+                .then(snapshot => {
+                    const allScores = [];
+                    snapshot.forEach(child => allScores.push(child.val()));
+        
+                    const others = allScores.filter(s => s !== accuracy || allScores.indexOf(s) !== allScores.lastIndexOf(s));
+                    // Plus robuste : on retire juste notre propre score une fois
+                    const otherScores = [...allScores];
+                    const myIdx = otherScores.indexOf(accuracy);
+                    if (myIdx !== -1) otherScores.splice(myIdx, 1);
+        
+                    let percentileHTML = '';
+                    if (otherScores.length === 0) {
+                        percentileHTML = `<p style="color: #FFE066;">🏅 Vous êtes le·a premier·e participant·e à passer ce bloc !</p>`;
+                    } else {
+                        const below = otherScores.filter(s => s < accuracy).length;
+                        const above = otherScores.filter(s => s > accuracy).length;
+                        const percentileBetter = Math.round((below / otherScores.length) * 100);
+                        const percentileWorse = Math.round((above / otherScores.length) * 100);
+        
+                        if (percentileBetter >= 50) {
+                            percentileHTML = `<p style="color: #FFE066;">🏅 Vous avez mieux répondu que <strong>${percentileBetter}%</strong> des participants sur ce bloc.</p>`;
+                        } else {
+                            percentileHTML = `<p style="color: #FFAA44;">📊 <strong>${percentileWorse}%</strong> des participants ont mieux répondu que vous sur ce bloc.<br>Vous pouvez faire mieux au prochain !</p>`;
+                        }
+                    }
+        
+                    showScreen(`
+                        <div class="block-feedback">
+                            <h2>Bloc ${blockNum} terminé !</h2>
+                            <br>
+                            <p>Précision : ${(accuracy * 100).toFixed(1)}%</p>
+                            <p>Temps de réaction moyen : ${meanRt.toFixed(0)} ms</p>
+                            <br>
+                            ${percentileHTML}
+                            <br>
+                            ${blockNum < TEST_BLOCKS
+                                ? '<p>Appuyez sur <strong>ESPACE</strong> pour continuer</p>'
+                                : '<p>Appuyez sur <strong>ESPACE</strong> pour terminer</p>'}
+                        </div>
+                    `);
+        
+                    document.addEventListener('keydown', function spaceNextBlock(e) {
+                        if (e.key === ' ') {
+                            document.removeEventListener('keydown', spaceNextBlock);
+                            currentBlock++;
+                            startTestBlock();
+                        }
+                    });
+                })
+                .catch(err => {
+                    console.error("Erreur ranking:", err);
+                    // Fallback sans ranking si Firebase échoue
+                    showScreen(`
+                        <div class="block-feedback">
+                            <h2>Bloc ${blockNum} terminé !</h2>
+                            <br>
+                            <p>Précision : ${(accuracy * 100).toFixed(1)}%</p>
+                            <p>Temps de réaction moyen : ${meanRt.toFixed(0)} ms</p>
+                            <br>
+                            ${blockNum < TEST_BLOCKS
+                                ? '<p>Appuyez sur <strong>ESPACE</strong> pour continuer</p>'
+                                : '<p>Appuyez sur <strong>ESPACE</strong> pour terminer</p>'}
+                        </div>
+                    `);
+                    document.addEventListener('keydown', function spaceNextBlock(e) {
+                        if (e.key === ' ') {
+                            document.removeEventListener('keydown', spaceNextBlock);
+                            currentBlock++;
+                            startTestBlock();
+                        }
+                    });
+                });
         }
         
         function showExperimentComplete() {
