@@ -1120,9 +1120,9 @@
                         const percentileWorse = Math.round((above / otherScores.length) * 100);
         
                         if (percentileBetter >= 50) {
-                            percentileHTML = `<p style="color: #FFE066;">🏅 Bravo ! Vous avez obtenu un meilleur score que <strong>${percentileBetter}%</strong> des participant·e·s sur ce bloc. Continuez comme ça ! </p>`;
+                            percentileHTML = `<p style="color: #FFE066;">🏅 Vous êtes dans le <strong>top ${100 - percentileBetter}%</strong> des participant·e·s sur ce bloc - continuez comme ça ! </p>`;
                         } else {
-                            percentileHTML = `<p style="color: #FFAA44;">📊 <strong>${percentileWorse}%</strong> des participant·e·s ont obtenu un meilleur score que vous sur ce bloc.<br>Vous pouvez faire mieux au prochain !</p>`;
+                            percentileHTML = `<p style="color: #FFAA44;">📊 Vous êtes dans le <strong>top ${100 - percentileBetter}%</strong> des participant·e·s sur ce bloc — continuez vos efforts ! </p>`;
                         }
                     }
         
