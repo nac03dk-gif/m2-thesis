@@ -1080,7 +1080,7 @@
                 timestamp: new Date().toISOString(),
                 rule_order: ruleOrder,
                 experiment_duration: Date.now() - window.experimentStartTime,
-                trials: allData
+                trials: allData.filter(d => d.task === 'test' && d.block === blockNum)
             };
             database.ref('participants/' + participantId + '/bloc_' + blockNum)
                 .set(dataToSave)
