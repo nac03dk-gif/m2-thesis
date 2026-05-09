@@ -1112,7 +1112,7 @@
         
                     let percentileHTML = '';
                     if (otherScores.length === 0) {
-                        percentileHTML = `<p style="color: #FFE066;">🏅 Vous êtes le·a premier·e participant·e à passer ce bloc !</p>`;
+                        percentileHTML = '';
                     } else {
                         const below = otherScores.filter(s => s < accuracy).length;
                         const above = otherScores.filter(s => s > accuracy).length;
