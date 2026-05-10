@@ -925,17 +925,18 @@
                     <br>
                     <p>A chaque essai, vous verrez apparaître :</p>
                     <p>- Soit une des <strong><span class="jaune">formes</span></strong> vues précédemment</p> 
-                    <p>- Soit une <strong><span class="jaune">flèche</span></strong> pointant vers la droite ou la gauche</p>
+                    <p>- Soit une <strong><span class="jaune">flèche</span></strong> pointant vers la droite ou vers la gauche</p>
                     <br>
                     <p style="text-align: center;">Une des formes a été définie comme la forme de référence :</p>
                     <div style="text-align: center; margin: 5px 0;">
-                        <div style="display: flex; justify-content: center; height: 160px; align-items: center;">
+                        <div style="display: flex; justify-content: center; height: 140px; align-items: center;">
                             ${referenceShapeHTML}
                         </div>
                     </div>
                     <p style="text-align: center;">Elle restera la référence pendant toute l’expérience.</p>
                     <br>
-                    <p>-> Votre tâche : appuyer sur la touche <strong><span class="jaune">ESPACE</span></strong> lorsque la forme/flèche présentée correspond à la consigne du bloc en cours. <span class="jaune">SINON, NE FAITES RIEN.</span></p>
+                    <p>-> Votre tâche : appuyer sur la touche <strong><span class="jaune">ESPACE</span></strong> lorsque la forme/flèche présentée correspond à la consigne du bloc en cours. 
+                    <p><span class="jaune">SINON, NE FAITES RIEN.</span></p>
                     <br>
                     <p>L’expérience est composée de 4 blocs, chacun associé à une consigne différente :</p>
                     <p>- Appuyez sur ESPACE si la forme <strong><span class="jaune">GAGNE</span></strong> face à la référence OU si la flèche pointe vers la <strong><span class="jaune">DROITE</span></strong></p>
@@ -952,6 +953,7 @@
             
             document.addEventListener('keydown', function spaceTestStart(e) {
                 if (e.key === ' ') {
+                    e.preventDefault();
                     document.removeEventListener('keydown', spaceTestStart);
                     showPracticeBlock(ruleOrder[0], () => {
                         currentBlock = 0;
