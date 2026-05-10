@@ -250,6 +250,12 @@
         
         const PRACTICE_TRIALS_COUNT = 10;
         const DEBUG_MODE = true;
+
+        window.addEventListener('keydown', function(e) {
+            if (e.key === ' ') {
+                e.preventDefault();
+            }
+        }, { passive: false });
         
         const SHAPES_POOL = [
             { type: 'square', color: '#FF7A1A', name: 'carré orange' },
